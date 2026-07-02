@@ -10,6 +10,7 @@ import { Footer } from '@/components/footer'
 
 import { photos } from '@/lib/data'
 import { useState } from 'react'
+import AnimatedGallery from '@/components/hero-gallery'
 
 function MarqueeText() {
   const currentYear = new Date().getFullYear()
@@ -101,9 +102,10 @@ export default function Home() {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <GalleryGrid photos={featuredPhotos} isHomepage={true} />
+
           </motion.div>
         </div>
+        <AnimatedGallery />
       </section>
 
       {/* About — horizontal editorial */}
@@ -124,7 +126,12 @@ export default function Home() {
               </h3>
               <div className="h-px w-full bg-foreground/10" />
               <p className="text-sm font-light text-muted-high leading-relaxed max-w-sm">
-                This isn't a project or a portfolio — just photos I've taken over the years, kept exactly as random as they happened.
+                This isn't a project or a portfolio <span className="group relative inline-block cursor-help text-foreground/80 hover:text-foreground transition-colors duration-300">
+                  —
+                  <span className="pointer-events-none absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-max max-w-[180px] rounded-sm border border-foreground/10 bg-background px-3 py-1.5 text-[11px] font-light text-muted-high opacity-0 scale-95 origin-bottom transition-all duration-200 group-hover:opacity-100 group-hover:scale-100 shadow-sm shadow-black/10">
+                    yes, a real em dash.
+                  </span>
+                </span>{' '}just photos I've taken over the years, kept exactly as random as they happened.
               </p>
               <p className="text-sm font-light text-muted-med leading-relaxed max-w-sm">
                 If you find a few that make you stop scrolling for a second, that's pretty cool.

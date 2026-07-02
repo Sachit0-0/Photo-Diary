@@ -5,6 +5,7 @@ import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
 import { photos, type Photo } from "@/lib/data";
+import { KineticText } from './ui/kinetic-text'
 
 function SplitText({ text, className, delay = 0 }: { text: string; className?: string; delay?: number }) {
   return (
@@ -162,6 +163,7 @@ export function Hero() {
   const [activePhoto, setActivePhoto] = useState<Photo | null>(null)
   const [scrollHovered, setScrollHovered] = useState(false)
   const categoriesCount = new Set(photos.map(p => p.category)).size
+  const [heroSettled, setHeroSettled] = useState(false)
 
   return (
     <div className="relative w-full min-h-[100svh] flex flex-col justify-end pb-24 sm:pb-16 md:pb-24 px-5 sm:px-8 md:px-12 overflow-hidden">
@@ -173,7 +175,7 @@ export function Hero() {
             <motion.div
               key={activePhoto.id}
               initial={{ opacity: 0, scale: 1.04 }}
-              animate={{ opacity: 0.35, scale: 1 }}
+              animate={{ opacity: 1.35, scale: 1 }}
               exit={{ opacity: 0, scale: 0.96 }}
               transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
               className="absolute inset-0 w-full h-full mix-blend-luminosity dark:mix-blend-plus-lighter"
@@ -263,13 +265,13 @@ export function Hero() {
         </AnimatePresence>
       </div>
 
-      {/* Floating thumbnail strip — right side, vertically centered (desktop only) */}
+
       <motion.div
         initial={{ opacity: 0, x: 30 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 1.2, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
         onMouseLeave={() => setActivePhoto(null)}
-        className="hidden xl:flex absolute right-12 top-1/2 -translate-y-1/2 flex-col gap-3 z-10"
+        className="hidden xl:flex absolute right-12 top-1/2 -translate-y-1/2 flex-col items-end gap-3 z-10"
       >
         {previewPhotos.map((photo) => {
           const isActive = activePhoto?.id === photo.id
@@ -306,45 +308,76 @@ export function Hero() {
             </motion.div>
           )
         })}
+
+        <div className="flex flex-col items-center gap-4 mt-8">
+          <Link
+            href="/gallery"
+            className="group inline-flex items-center gap-2 border border-foreground/20 px-8 py-3 text-[10px] md:text-xs tracking-[0.25em] uppercase font-semibold text-foreground hover:bg-foreground hover:text-background transition-colors duration-300"
+          >
+            Enter Archive Page
+            <span className="transition-transform duration-300 group-hover:translate-x-0.5">→</span>
+          </Link>
+        </div>
         <span className="text-[8px] tracking-[0.2em] uppercase text-muted-med font-medium text-center mt-1">
           {photos.length} Photos
         </span>
-        <Link
-          href="/gallery"
-          className="group flex items-center justify-center gap-1 text-[8px] tracking-[0.2em] uppercase text-muted-high font-semibold text-center hover:text-foreground transition-colors duration-300"
-        >
-          Enter Archive
-          <span className="transition-transform duration-300 group-hover:translate-x-0.5">→</span>
-        </Link>
+
+
+
+
       </motion.div>
 
+
       {/* Main headline — massive */}
-      <div className="relative z-10 w-full max-w-full lg:max-w-[70vw] mt-16 sm:mt-0 -mt-0 sm:-mt-6 md:-mt-10">
-        <h1
-          className="text-[16vw] xs:text-[15vw] sm:text-[16vw] md:text-[13vw] lg:text-[11vw] font-black tracking-[-0.02em] sm:tracking-[-0.03em] leading-[0.85] text-foreground uppercase select-none break-words"
-          aria-label="Random Moments"
-        >
-          {shouldReduceMotion ? (
-            <>
-              <span className="block">Random</span>
-              <span className="block text-muted-low">
-                Moments
+      <h1
+        className="text-[16vw] xs:text-[15vw] sm:text-[16vw] md:text-[13vw] lg:text-[11vw] font-black tracking-[-0.02em] sm:tracking-[-0.03em] leading-[0.85] text-foreground uppercase select-none break-words [contain:layout_paint]"
+        aria-label="Random Moments"
+      >
+        {shouldReduceMotion ? (
+          <>
+            <span className="block">Random</span>
+            <span className="block text-muted-low">
+              Moments
+              <CameraIcon />
+            </span>
+          </>
+        ) : (
+          <>
+            <span className="">
+              <motion.span
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.9, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                onAnimationComplete={() => setHeroSettled(true)}
+                className="block will-change-transform transform-gpu isolate"
+              >
+                <KineticText
+                  as="span"
+                  text="Random"
+                  className={`font-[inherit] ${heroSettled ? '' : 'pointer-events-none'}`}
+                />
+              </motion.span>
+            </span>
+
+
+            <span className="block overflow-hidden">
+              <motion.span
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.9, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                className="block will-change-transform transform-gpu isolate"
+              >
+                <KineticText
+                  as="span"
+                  text="Moments"
+                  className={`text-muted-low font-[inherit] ${heroSettled ? '' : 'pointer-events-none'}`}
+                />
                 <CameraIcon />
-              </span>
-            </>
-          ) : (
-            <>
-              <span className="block overflow-hidden">
-                <SplitText text="Random" delay={0.3} />
-              </span>
-              <span className="block overflow-hidden">
-                <SplitText text="Moments" delay={0.45} className="text-muted-low" />
-                <CameraIcon />
-              </span>
-            </>
-          )}
-        </h1>
-      </div>
+              </motion.span>
+            </span>
+          </>
+        )}
+      </h1>
 
       {/* Bottom row — description, stats, CTA */}
       <motion.div
@@ -387,13 +420,7 @@ export function Hero() {
         </div>
 
         {/* Right: CTA — always visible; the thumbnail strip's link is xl-only */}
-        <Link
-          href="/gallery"
-          className="group flex items-center gap-1.5 text-[10px] md:text-xs tracking-[0.2em] uppercase text-muted-high font-semibold hover:text-foreground transition-colors duration-300 xl:hidden"
-        >
-          Enter Archive
-          <span className="transition-transform duration-300 group-hover:translate-x-0.5">→</span>
-        </Link>
+
       </motion.div>
 
       {/* Scroll indicator — centered at the bottom */}

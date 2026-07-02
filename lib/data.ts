@@ -55,15 +55,6 @@ export const photos: Photo[] = [
     category: 'landscape',
   },
   {
-    id: '6',
-    title: 'Passing Stranger',
-    location: 'Pokhara',
-    url: 'https://images.unsplash.com/photo-1504593811423-6dd665756598',
-    width: 700,
-    height: 1100,
-    category: 'portrait',
-  },
-  {
     id: '7',
     title: 'River Stones',
     location: 'Nepal',
@@ -125,15 +116,6 @@ export const photos: Photo[] = [
     width: 800,
     height: 1200,
     category: 'nature',
-  },
-  {
-    id: '14',
-    title: 'Street Portrait',
-    location: 'Kathmandu',
-    url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e',
-    width: 700,
-    height: 1000,
-    category: 'portrait',
   },
   {
     id: '15',
