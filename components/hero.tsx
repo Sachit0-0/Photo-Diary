@@ -35,7 +35,7 @@ function CameraIcon() {
   return (
     <motion.svg
       viewBox="0 0 200 200"
-      className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 inline-block ml-3 md:ml-6 -translate-y-4 md:-translate-y-6 text-foreground/80"
+      className="w-10 h-10 xs:w-12 xs:h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 inline-block ml-2 md:ml-6 -translate-y-3 md:-translate-y-6 text-foreground/80"
       initial={{ opacity: 0, scale: 0.8, rotate: -6 }}
       animate={
         shouldReduceMotion
@@ -64,14 +64,107 @@ function CameraIcon() {
   )
 }
 
+// Small viewfinder-style corner bracket, echoes a camera focus frame.
+function CornerBracket({ className }: { className?: string }) {
+  return (
+    <motion.svg
+      width="18"
+      height="18"
+      viewBox="0 0 18 18"
+      fill="none"
+      className={className}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 0.5 }}
+      transition={{ duration: 1, delay: 1.6 }}
+    >
+      <path d="M0 6V1a1 1 0 0 1 1-1h5" stroke="currentColor" strokeWidth="1.5" />
+    </motion.svg>
+  )
+}
+
+// Rule-of-thirds composition grid — a real photographic tool, faint, full-bleed.
+function CompositionGrid() {
+  return (
+    <motion.svg
+      className="absolute inset-0 w-full h-full text-foreground pointer-events-none"
+      preserveAspectRatio="none"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 0.05 }}
+      transition={{ duration: 1.6, delay: 0.4 }}
+    >
+      <line x1="33.333%" y1="0" x2="33.333%" y2="100%" stroke="currentColor" strokeWidth="1.25" />
+      <line x1="66.666%" y1="0" x2="66.666%" y2="100%" stroke="currentColor" strokeWidth="1.25" />
+      <line x1="0" y1="33.333%" x2="100%" y2="33.333%" stroke="currentColor" strokeWidth="1.1" />
+      <line x1="0" y1="66.666%" x2="100%" y2="66.666%" stroke="currentColor" strokeWidth="1.1" />
+    </motion.svg>
+  )
+}
+
+// Film sprocket holes running down the left edge, like the edge of a 35mm strip.
+function FilmSprockets() {
+  const count = 14
+  return (
+    <motion.svg
+      width="20"
+      height="100%"
+      className="hidden md:block absolute left-3 top-0 bottom-0 z-10 pointer-events-none text-foreground"
+      preserveAspectRatio="none"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 1, delay: 0.6 }}
+    >
+      <line x1="20" y1="8%" x2="20" y2="92%" stroke="currentColor" strokeOpacity="0.14" strokeWidth="1.4" />
+      {Array.from({ length: count }).map((_, i) => {
+        const y = 8 + (i * (84 / (count - 1)))
+        return (
+          <rect
+            key={i}
+            x="2"
+            y={`${y}%`}
+            width="9"
+            height="13"
+            rx="2"
+            fill="none"
+            stroke="currentColor"
+            strokeOpacity="0.28"
+            strokeWidth="1.2"
+          />
+        )
+      })}
+    </motion.svg>
+  )
+}
+
+// Compass rose — pairs with the lat/long coordinate stamp.
+function CompassRose({ className }: { className?: string }) {
+  return (
+    <motion.svg
+      width="26"
+      height="26"
+      viewBox="0 0 26 26"
+      fill="none"
+      className={className}
+      initial={{ opacity: 0, rotate: -20 }}
+      animate={{ opacity: 0.55, rotate: 0 }}
+      transition={{ duration: 1, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+    >
+      <circle cx="13" cy="13" r="11.5" stroke="currentColor" strokeWidth="1" />
+      <path d="M13 3L15 12L13 13L11 12L13 3Z" fill="currentColor" />
+      <path d="M13 23L11 14L13 13L15 14L13 23Z" fill="none" stroke="currentColor" strokeWidth="1.1" />
+      <circle cx="13" cy="13" r="1" fill="currentColor" />
+    </motion.svg>
+  )
+}
+
 export function Hero() {
   const shouldReduceMotion = useReducedMotion()
   const previewPhotos = photos.slice(0, 4)
   const [activePhoto, setActivePhoto] = useState<Photo | null>(null)
+  const [scrollHovered, setScrollHovered] = useState(false)
   const categoriesCount = new Set(photos.map(p => p.category)).size
 
   return (
-    <div className="relative w-full min-h-screen flex flex-col justify-end pb-16 md:pb-24 px-8 md:px-12 overflow-hidden">
+    <div className="relative w-full min-h-[100svh] flex flex-col justify-end pb-24 sm:pb-16 md:pb-24 px-5 sm:px-8 md:px-12 overflow-hidden">
 
       {/* Dynamic Background Image Crossfade (Visible only when hovering) */}
       <div className="absolute inset-0 z-0 pointer-events-none select-none">
@@ -99,36 +192,56 @@ export function Hero() {
         </AnimatePresence>
       </div>
 
+      {/* Rule-of-thirds composition grid — faint, full-bleed graphic */}
+      <CompositionGrid />
+
+      {/* Film sprocket holes along the left edge */}
+      <FilmSprockets />
+
+      {/* Viewfinder corner brackets — subtle frame around the whole hero */}
+      <CornerBracket className="absolute top-6 left-6 text-foreground/50 hidden sm:block" />
+      <CornerBracket className="absolute top-6 right-6 text-foreground/50 hidden sm:block -scale-x-100" />
+      <CornerBracket className="absolute bottom-6 left-6 text-foreground/50 hidden sm:block -scale-y-100" />
+      <CornerBracket className="absolute bottom-6 right-6 text-foreground/50 hidden sm:block -scale-100" />
+
       {/* Top-left: label + coordinate stamp */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.2, delay: 0.2 }}
-        className="absolute top-28 left-8 md:left-12 flex flex-col gap-2 z-10"
+        className="absolute mt-20 top-6 sm:top-20 md:top-28 left-5 sm:left-8 md:left-12 flex flex-col gap-1.5 sm:gap-2 z-10 max-w-[62vw] sm:max-w-none"
       >
-        <div className="flex items-center gap-3 text-[10px] md:text-xs font-bold tracking-[0.25em] uppercase text-muted-high">
+        <div className="flex items-center gap-2 sm:gap-3 text-[9px] md:text-xs font-bold tracking-[0.18em] sm:tracking-[0.25em] uppercase text-muted-high">
           <span className="text-muted-med">01 /</span>
           <span>Just Clicks from Nepal</span>
         </div>
-        <span className="text-[9px] md:text-[10px] tracking-[0.2em] text-muted-med tabular-nums">
-          27.7172° N, 85.3240° E
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="text-[8px] sm:text-[9px] md:text-[10px] tracking-[0.15em] sm:tracking-[0.2em] text-muted-med tabular-nums">
+            27.7172° N, 85.3240° E
+          </span>
+          <CompassRose className="text-foreground hidden xs:block" />
+        </div>
       </motion.div>
 
-      {/* Top-right: archive label */}
+      {/* Top-right: archive label + live shooting indicator */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.2, delay: 0.3 }}
-        className="absolute top-28 right-8 md:right-12 text-right z-10"
+        className="absolute  mt-18 sm:top-20 md:top-28 right-5 sm:right-8 md:right-12 flex items-center gap-1.5 sm:gap-2 z-10"
       >
-        <span className="text-[10px] md:text-xs tracking-[0.25em] uppercase text-muted-high font-bold">
-          Photography Archive
+        <motion.span
+          className="w-1.5 h-1.5 rounded-full bg-foreground/70 shrink-0"
+          animate={shouldReduceMotion ? {} : { opacity: [1, 0.25, 1] }}
+          transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut', delay: 1.6 }}
+        />
+        <span className="text-[22px] tracking-[0.18em] sm:tracking-[0.25em] uppercase text-muted-high font-bold whitespace-nowrap">
+          <span className="hidden sm:inline ">Photography </span>Archive
         </span>
       </motion.div>
 
       {/* Floating thumbnail info details */}
-      <div className="absolute right-36 top-1/2 -translate-y-1/2 text-right hidden lg:block z-10 pointer-events-none">
+      <div className="absolute right-36 top-1/2 -translate-y-1/2 text-right hidden xl:block z-10 pointer-events-none">
         <AnimatePresence mode="wait">
           {activePhoto && (
             <motion.div
@@ -150,13 +263,13 @@ export function Hero() {
         </AnimatePresence>
       </div>
 
-      {/* Floating thumbnail strip — right side, vertically centered */}
+      {/* Floating thumbnail strip — right side, vertically centered (desktop only) */}
       <motion.div
         initial={{ opacity: 0, x: 30 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 1.2, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
         onMouseLeave={() => setActivePhoto(null)}
-        className="hidden lg:flex absolute right-12 top-1/2 -translate-y-1/2 flex-col gap-3 z-10"
+        className="hidden xl:flex absolute right-12 top-1/2 -translate-y-1/2 flex-col gap-3 z-10"
       >
         {previewPhotos.map((photo) => {
           const isActive = activePhoto?.id === photo.id
@@ -181,18 +294,34 @@ export function Hero() {
                 className="object-cover"
                 loading="lazy"
               />
+              {/* Tiny focus reticle, appears on the active thumbnail only */}
+              {isActive && (
+                <motion.span
+                  initial={{ opacity: 0, scale: 0.6 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3 }}
+                  className="absolute top-1 right-1 w-2 h-2 border-t border-r border-background/90"
+                />
+              )}
             </motion.div>
           )
         })}
         <span className="text-[8px] tracking-[0.2em] uppercase text-muted-med font-medium text-center mt-1">
           {photos.length} Photos
         </span>
+        <Link
+          href="/gallery"
+          className="group flex items-center justify-center gap-1 text-[8px] tracking-[0.2em] uppercase text-muted-high font-semibold text-center hover:text-foreground transition-colors duration-300"
+        >
+          Enter Archive
+          <span className="transition-transform duration-300 group-hover:translate-x-0.5">→</span>
+        </Link>
       </motion.div>
 
       {/* Main headline — massive */}
-      <div className="relative z-10 w-full max-w-[90vw] lg:max-w-[70vw]">
+      <div className="relative z-10 w-full max-w-full lg:max-w-[70vw] mt-16 sm:mt-0 -mt-0 sm:-mt-6 md:-mt-10">
         <h1
-          className="text-[18vw] sm:text-[16vw] md:text-[13vw] lg:text-[11vw] font-black tracking-[-0.03em] leading-[0.85] text-foreground uppercase select-none"
+          className="text-[16vw] xs:text-[15vw] sm:text-[16vw] md:text-[13vw] lg:text-[11vw] font-black tracking-[-0.02em] sm:tracking-[-0.03em] leading-[0.85] text-foreground uppercase select-none break-words"
           aria-label="Random Moments"
         >
           {shouldReduceMotion ? (
@@ -222,64 +351,83 @@ export function Hero() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.9, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}
-        className="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-8 mt-12 md:mt-16 pt-8 border-t border-foreground/15"
+        className="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-8 mt-10 md:mt-16 pt-6 md:pt-8 border-t-[1.5px] border-foreground/15"
       >
         {/* Left: description */}
-        <p className="text-sm md:text-base font-light text-muted-high max-w-xs leading-relaxed">
-          A small, unsorted collection of photos taken over the years{' '}
-          <span className="group relative inline-block cursor-help text-foreground/80 hover:text-foreground transition-colors duration-300">
-            —
-            <span className="pointer-events-none absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-max max-w-[180px] rounded-sm border border-foreground/10 bg-background px-3 py-1.5 text-[11px] font-light text-muted-high opacity-0 scale-95 origin-bottom transition-all duration-200 group-hover:opacity-100 group-hover:scale-100 shadow-sm shadow-black/10">
-              yes, a real em dash.
-            </span>
-          </span>{' '}
-          kept exactly as random as they happened.
-        </p>
+        <div className="max-w-xs space-y-2">
+          <p className="text-sm md:text-base font-light text-muted-high leading-relaxed">
+            A small, unsorted collection of photos taken over the years{' '}
+            <span className="group relative inline-block cursor-help text-foreground/80 hover:text-foreground transition-colors duration-300">
+              —
+              <span className="pointer-events-none absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-max max-w-[180px] rounded-sm border border-foreground/10 bg-background px-3 py-1.5 text-[11px] font-light text-muted-high opacity-0 scale-95 origin-bottom transition-all duration-200 group-hover:opacity-100 group-hover:scale-100 shadow-sm shadow-black/10">
+                yes, a real em dash.
+              </span>
+            </span>{' '}
+            kept exactly as random as they happened.
+          </p>
+          {/* EXIF-style metadata line, quiet nod to the medium */}
+          <span className="block text-[9px] tracking-[0.15em] uppercase text-muted-med tabular-nums">
+            f/2.8 · 1/125 · ISO 200
+          </span>
+        </div>
 
-        {/* Center: stats */}
-        <div className="hidden md:flex items-center gap-8 text-muted-med">
+        {/* Center: stats — condensed on mobile, full on desktop */}
+        <div className="flex items-center gap-4 sm:gap-6 md:gap-8 text-muted-med">
           <div className="text-center">
-            <span className="block text-2xl font-black tabular-nums text-foreground">{photos.length}</span>
-            <span className="text-[9px] tracking-[0.2em] uppercase font-medium text-muted-high">Photos</span>
+            <span className="block text-lg sm:text-xl md:text-2xl font-black tabular-nums text-foreground">{photos.length}</span>
+            <span className="text-[8px] sm:text-[9px] tracking-[0.15em] sm:tracking-[0.2em] uppercase font-medium text-muted-high">Photos</span>
           </div>
-          <div className="w-px h-8 bg-foreground/15" />
+          <div className="w-0.5 h-6 sm:h-8 bg-foreground/15" />
 
-          <div className="w-px h-8 bg-foreground/15" />
-          <div className="text-center">
-            <span className="block text-2xl font-black tabular-nums text-foreground">1</span>
+          <div className="hidden sm:block w-[3px] h-8 bg-foreground/15" />
+          <div className="hidden sm:block text-center">
+            <span className="block text-xl md:text-2xl font-black tabular-nums text-foreground">1</span>
             <span className="text-[9px] tracking-[0.2em] uppercase font-medium text-muted-high">Old Camera</span>
           </div>
         </div>
 
-        {/* Right: CTA */}
-        <Link href="/gallery" className="group inline-flex items-center gap-6 overflow-hidden">
-          <span className="relative flex flex-col leading-none overflow-hidden">
-            <span className="text-[11px] tracking-[0.2em] uppercase font-semibold text-foreground transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:-translate-y-full">
-              See All
-            </span>
-            <span className="absolute top-full text-[11px] tracking-[0.2em] uppercase font-semibold text-muted-high transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:-translate-y-full">
-              See All
-            </span>
-          </span>
-          <span className="w-12 h-px bg-muted-high group-hover:w-20 transition-all duration-500 ease-[cubic-bezier(0.76,0,0.24,1)]" />
+        {/* Right: CTA — always visible; the thumbnail strip's link is xl-only */}
+        <Link
+          href="/gallery"
+          className="group flex items-center gap-1.5 text-[10px] md:text-xs tracking-[0.2em] uppercase text-muted-high font-semibold hover:text-foreground transition-colors duration-300 xl:hidden"
+        >
+          Enter Archive
+          <span className="transition-transform duration-300 group-hover:translate-x-0.5">→</span>
         </Link>
       </motion.div>
 
-      {/* Scroll indicator */}
+      {/* Scroll indicator — centered at the bottom */}
       <motion.div
         initial={{ opacity: 0, scaleY: 0 }}
         animate={{ opacity: 1, scaleY: 1 }}
         transition={{ duration: 1.4, delay: 1.4, ease: 'easeOut' }}
         style={{ transformOrigin: 'top' }}
-        className="absolute bottom-8 right-8 md:right-12 flex flex-col items-center gap-3"
+        onHoverStart={() => setScrollHovered(true)}
+        onHoverEnd={() => setScrollHovered(false)}
+        className="hidden sm:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-3 cursor-default"
       >
-        <div className="w-px h-14 bg-gradient-to-b from-foreground/30 to-transparent" />
+        <div className="w-0.5 h-14 bg-gradient-to-b from-foreground/35 to-transparent" />
         <span
           className="text-[9px] tracking-[0.3em] uppercase text-muted-med font-medium"
           style={{ writingMode: 'vertical-rl' }}
         >
           Scroll
         </span>
+        <motion.svg
+          width="8"
+          height="8"
+          viewBox="0 0 8 8"
+          fill="none"
+          className="text-muted-med"
+          animate={
+            shouldReduceMotion || scrollHovered
+              ? { y: 0, opacity: 0.6 }
+              : { y: [0, 3, 0], opacity: [0.35, 0.8, 0.35] }
+          }
+          transition={{ duration: 2, repeat: shouldReduceMotion || scrollHovered ? 0 : Infinity, ease: 'easeInOut', delay: 1.8 }}
+        >
+          <path d="M1 1L4 4L7 1" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+        </motion.svg>
       </motion.div>
     </div>
   )

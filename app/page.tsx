@@ -7,25 +7,41 @@ import { Navigation } from '@/components/navigation'
 import { Hero } from '@/components/hero'
 import { GalleryGrid } from '@/components/gallery-grid'
 import { Footer } from '@/components/footer'
-import { Preloader } from '@/components/preloader'
+
 import { photos } from '@/lib/data'
+import { useState } from 'react'
 
 function MarqueeText() {
-  const text = 'Photography — Nepal — 2024 — Random Moments — '
-  const repeated = text.repeat(6)
+  const currentYear = new Date().getFullYear()
+  const text = `Photo Diary ~ Nepal ~ ${currentYear} ~ Notes ~ From ~ The ~ Road       `
+  const [isPaused, setIsPaused] = useState(false)
+
+  // Create a long string with multiple repetitions
+  const repeatedText = Array(8).fill(text).join(' — ')
+  // or simply: const repeatedText = text.repeat(8)
+
   return (
-    <div className="w-full overflow-hidden border-t border-b border-foreground/10 py-4">
+    <div
+      className="w-full overflow-hidden border-t border-b border-foreground/10 py-5 md:py-6 relative group"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+    >
+
+
       <motion.div
-        animate={{ x: ['0%', '-50%'] }}
-        transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-        className="inline-flex whitespace-nowrap"
+        animate={isPaused ? {} : { x: ['0%', '-50%'] }}
+        transition={isPaused ? {} : {
+          duration: 30,
+          repeat: Infinity,
+          ease: 'linear',
+          repeatType: 'loop'
+        }}
+        className="inline-flex whitespace-nowrap  gap-6 md:gap-8"
       >
-        <span className="text-[11px] tracking-[0.25em] uppercase text-muted-low font-medium pr-8">
-          {repeated}
+        <span className="text-[26px] md:text-xs tracking-[0.3em] uppercase  font-light text-muted-high leading-relaxed">
+          {repeatedText}
         </span>
-        <span className="text-[11px] tracking-[0.25em] uppercase text-muted-low font-medium pr-8">
-          {repeated}
-        </span>
+
       </motion.div>
     </div>
   )
@@ -47,7 +63,7 @@ export default function Home() {
   return (
     <main className="bg-background text-foreground min-h-screen">
       {/* Smooth text-based Preloader */}
-      <Preloader />
+
 
       <Navigation />
       <Hero />
@@ -204,17 +220,22 @@ export default function Home() {
 
             <Link
               href="/gallery"
-              className="group inline-flex items-end gap-6"
+              className="group flex items-center gap-6"
             >
-              <span className="text-3xl md:text-5xl font-black tracking-[-0.03em] uppercase">
-                Explore Archive
-              </span>
+              <div className="flex h-14 w-14 items-center justify-center rounded-full border border-foreground transition-all duration-500 group-hover:rotate-45">
+                <span className="text-xl">→</span>
+              </div>
 
-              <span className="mb-2 text-lg transition-transform duration-300 group-hover:translate-x-2">
-                →
-              </span>
+              <div>
+                <p className="text-xs uppercase tracking-[0.25em] text-muted-high">
+                  View
+                </p>
+
+                <p className="text-lg font-semibold">
+                  Explore Archive
+                </p>
+              </div>
             </Link>
-
           </div>
 
         </div>
