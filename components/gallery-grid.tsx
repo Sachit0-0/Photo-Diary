@@ -1,19 +1,19 @@
 'use client'
 
-import { useRef } from 'react'
-import { useState } from 'react'
-import { motion, useScroll, useTransform, MotionValue } from 'framer-motion'
+import { useRef, useState } from 'react'
+import { motion, useScroll, useTransform } from 'framer-motion'
+import Image from 'next/image'
 import type { Photo } from '@/lib/data'
 import { Lightbox } from './lightbox'
+
+const MotionImage = motion(Image)
 
 interface GalleryGridProps {
   photos: Photo[]
   isHomepage?: boolean
 }
 
-const aspectPattern = ['aspect-[3/4]', 'aspect-square', 'aspect-[4/5]', 'aspect-[3/4]', 'aspect-[4/3]', 'aspect-square']
-// each item's parallax travel distance in px — varying per column creates the drift
-const parallaxPattern = [60, -40, 90, -60, 40, -90]
+const parallaxPattern = [50, -35, 75, -50, 35, -75]
 
 function ParallaxImageCard({
   photo,
@@ -27,34 +27,65 @@ function ParallaxImageCard({
   const ref = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ['start end', 'end start'], // tracks from entering to leaving viewport
+    offset: ['start end', 'end start'],
   })
 
   const distance = parallaxPattern[index % parallaxPattern.length]
   const y = useTransform(scrollYProgress, [0, 1], [distance, -distance])
 
+  // Alternate aspect ratios for visual interest
+  const aspects = [
+    'aspect-[3/4]',
+    'aspect-[4/3]',
+    'aspect-[2/3]',
+    'aspect-square',
+    'aspect-[3/4]',
+    'aspect-[5/4]',
+  ]
+  const aspect = aspects[index % aspects.length]
+
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 32 }}
+      initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-80px' }}
-      transition={{ duration: 0.7, delay: (index % 6) * 0.06, ease: [0.16, 1, 0.3, 1] }}
-      className="break-inside-avoid mb-8 md:mb-10"
+      viewport={{ once: true, margin: '-60px' }}
+      transition={{ duration: 0.9, delay: (index % 6) * 0.07, ease: [0.16, 1, 0.3, 1] }}
+      className="break-inside-avoid mb-6 md:mb-8"
     >
-      <button type="button" onClick={onClick} className="group block text-left w-full">
-        <div className={`relative overflow-hidden bg-card ${aspectPattern[index % aspectPattern.length]}`}>
-          <motion.img
+      <button
+        type="button"
+        onClick={onClick}
+        className="group block text-left w-full"
+      >
+        {/* Image container */}
+        <div className={`relative overflow-hidden bg-foreground/4 ${aspect}`}>
+          <MotionImage
             src={photo.url}
             alt={photo.title ?? ''}
             style={{ y }}
-            className="absolute inset-0 w-full h-[120%] -top-[10%] object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="absolute inset-0 w-full h-[120%] -top-[10%] object-cover transition-[filter,transform] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.04] grayscale group-hover:grayscale-0 will-change-transform"
+            loading="lazy"
           />
+
+          {/* Minimal hover overlay — darkens slightly */}
+          <div className="absolute inset-0 bg-background/0 group-hover:bg-background/20 transition-colors duration-500 pointer-events-none" />
+
+          {/* Number tag — top right corner */}
+          <div className="absolute top-4 right-4 text-[10px] tracking-[0.15em] font-medium text-foreground/0 group-hover:text-muted-high transition-colors duration-400 uppercase">
+            {String(index + 1).padStart(2, '0')}
+          </div>
         </div>
+
+        {/* Title below — slide up on hover */}
         {photo.title && (
-          <p className="mt-4 text-sm font-light tracking-wide text-foreground/60 group-hover:text-foreground transition-colors duration-300">
-            {photo.title}
-          </p>
+          <div className="mt-3 overflow-hidden h-4">
+            <p className="text-[11px] tracking-[0.15em] uppercase font-medium text-foreground/0 group-hover:text-muted-high transition-all duration-400 translate-y-4 group-hover:translate-y-0">
+              {photo.title}
+            </p>
+          </div>
         )}
       </button>
     </motion.div>
@@ -84,7 +115,7 @@ export function GalleryGrid({ photos, isHomepage }: GalleryGridProps) {
 
   return (
     <>
-      <div className="columns-1 md:columns-2 lg:columns-3 gap-8 md:gap-10 [column-fill:balance]">
+      <div className="columns-1 md:columns-2 lg:columns-3 gap-6 md:gap-8 [column-fill:balance]">
         {photos.map((photo, index) => (
           <ParallaxImageCard
             key={photo.id}

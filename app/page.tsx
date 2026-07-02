@@ -2,17 +2,41 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Navigation } from '@/components/navigation'
 import { Hero } from '@/components/hero'
 import { GalleryGrid } from '@/components/gallery-grid'
 import { Footer } from '@/components/footer'
+import { Preloader } from '@/components/preloader'
 import { photos } from '@/lib/data'
 
-function SectionEyebrow({ index, label }: { index: string; label: string }) {
+function MarqueeText() {
+  const text = 'Photography — Nepal — 2024 — Random Moments — '
+  const repeated = text.repeat(6)
   return (
-    <div className="flex items-center gap-3 text-xs md:text-sm font-bold tracking-[0.2em] uppercase text-foreground/50">
-      <span className="text-foreground/30">{index} /</span>
-      <span>{label}</span>
+    <div className="w-full overflow-hidden border-t border-b border-foreground/10 py-4">
+      <motion.div
+        animate={{ x: ['0%', '-50%'] }}
+        transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+        className="inline-flex whitespace-nowrap"
+      >
+        <span className="text-[11px] tracking-[0.25em] uppercase text-muted-low font-medium pr-8">
+          {repeated}
+        </span>
+        <span className="text-[11px] tracking-[0.25em] uppercase text-muted-low font-medium pr-8">
+          {repeated}
+        </span>
+      </motion.div>
+    </div>
+  )
+}
+
+function SectionLabel({ num, label }: { num: string; label: string }) {
+  return (
+    <div className="flex items-center gap-5">
+      <span className="text-[10px] tracking-[0.2em] uppercase text-muted-med font-medium">{num}</span>
+      <div className="h-px w-10 bg-foreground/15" />
+      <span className="text-[10px] tracking-[0.2em] uppercase text-muted-high font-semibold">{label}</span>
     </div>
   )
 }
@@ -20,149 +44,179 @@ function SectionEyebrow({ index, label }: { index: string; label: string }) {
 export default function Home() {
   const featuredPhotos = photos.slice(0, 6)
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2,
-      },
-    },
-  }
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.8 },
-    },
-  }
-
   return (
     <main className="bg-background text-foreground min-h-screen">
+      {/* Smooth text-based Preloader */}
+      <Preloader />
+
       <Navigation />
       <Hero />
 
-      {/* Featured Work Section */}
-      <section className="w-full py-32 md:py-40 border-b border-foreground/5">
-        <div className="max-w-7xl mx-auto px-6 md:px-8">
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="space-y-16"
-          >
-            <motion.div variants={itemVariants} className="max-w-2xl space-y-4">
-              <SectionEyebrow index="02" label="Recent Shots" />
-              <h2 className="text-5xl md:text-6xl lg:text-7xl font-light font-playfair leading-tight">
-                My Favorites
-              </h2>
-            </motion.div>
+      {/* Marquee divider */}
+      <MarqueeText />
 
-            <motion.p
-              variants={itemVariants}
-              className="text-lg md:text-xl font-light text-foreground/60 max-w-3xl leading-relaxed"
-            >
-              Some photos that turned out decent. The kind of stuff you want to go back and look at again.
-            </motion.p>
+      {/* Featured Work */}
+      <section className="w-full py-28 md:py-40">
+        <div className="max-w-screen-xl mx-auto px-8 md:px-12">
+
+          {/* Section header */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-20"
+          >
+            <div className="space-y-5">
+              <SectionLabel num="002" label="Selected Work" />
+              <h2 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-[-0.03em] leading-[0.85] uppercase">
+                My<br />
+                <span className="text-muted-low">Favorites</span>
+              </h2>
+            </div>
+            <p className="text-sm font-light text-muted-high max-w-xs leading-relaxed md:text-right">
+              Some photos that turned out decent. The kind of stuff you go back and look at again.
+            </p>
           </motion.div>
 
           <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="mt-20"
+            transition={{ duration: 0.6, delay: 0.2 }}
           >
             <GalleryGrid photos={featuredPhotos} isHomepage={true} />
           </motion.div>
         </div>
       </section>
 
-      {/* About Section - Editorial style */}
-      <section className="w-full py-32 md:py-40 border-b border-foreground/5">
-        <div className="max-w-7xl mx-auto px-6 md:px-8">
+      {/* About — horizontal editorial */}
+      <section className="w-full py-28 md:py-40 border-t border-foreground/10">
+        <div className="max-w-screen-xl mx-auto px-8 md:px-12">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 32 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="grid md:grid-cols-2 gap-12 md:gap-20 items-center"
+            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+            className="grid md:grid-cols-2 gap-16 md:gap-24 items-center"
           >
-            <div className="space-y-6">
-              <SectionEyebrow index="03" label="About" />
-              <h3 className="text-4xl md:text-5xl font-light font-playfair leading-tight">
-                A Small Collection
+            <div className="space-y-8">
+              <SectionLabel num="003" label="About" />
+              <h3 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-[-0.03em] leading-[0.85] uppercase">
+                A Small<br />
+                <span className="text-muted-low">Collection</span>
               </h3>
-              <p className="text-lg font-light text-foreground/60 leading-relaxed">
-                This isn't a project or a portfolio—just a collection of photos I've taken over the years.
+              <div className="h-px w-full bg-foreground/10" />
+              <p className="text-sm font-light text-muted-high leading-relaxed max-w-sm">
+                This isn't a project or a portfolio — just photos I've taken over the years, kept exactly as random as they happened.
               </p>
-              <p className="text-base font-light text-foreground/50 leading-relaxed">
+              <p className="text-sm font-light text-muted-med leading-relaxed max-w-sm">
                 If you find a few that make you stop scrolling for a second, that's pretty cool.
               </p>
             </div>
 
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
+              initial={{ opacity: 0, scale: 0.96 }}
               whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
               viewport={{ once: true }}
-              className="relative aspect-square bg-card overflow-hidden"
+              transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              className="relative aspect-[4/5] overflow-hidden"
             >
-              <img
+              <Image
                 src={photos[0]?.url}
                 alt="Featured moment"
-                className="w-full h-full object-cover"
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-cover grayscale"
+                loading="lazy"
               />
+              {/* Thin border overlay */}
               <div className="absolute inset-0 border border-foreground/10 pointer-events-none" />
             </motion.div>
           </motion.div>
         </div>
       </section>
 
-      {/* CTA Section — type-led, no boxed button */}
-      <section className="w-full py-32 md:py-48">
-        <div className="max-w-7xl mx-auto px-6 md:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="space-y-10"
-          >
-            <SectionEyebrow index="04" label="Gallery" />
+      {/* Section 004 — Inverted High-Contrast Editorial Banner Call-to-Action */}
+      <section className="relative overflow-hidden border-t border-foreground/10 py-32 md:py-44">
+        {/* Background image */}
+        <div className="absolute inset-0 opacity-[0.08] pointer-events-none">
+          <Image
+            src={photos[7]?.url || photos[0]?.url}
+            alt=""
+            fill
+            sizes="100vw"
+            className="object-cover grayscale"
+            loading="lazy"
+          />
+          <div className="absolute inset-0 bg-background/70" />
+        </div>
 
-            <h2 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-light font-playfair leading-[0.95] max-w-4xl text-balance">
-              More Shots
+        {/* Giant background text */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
+          <span className="text-[22vw] font-black uppercase tracking-[-0.08em] text-foreground/[0.03]">
+            Archive
+          </span>
+        </div>
+
+        <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-12 flex flex-col lg:flex-row justify-between gap-20">
+
+          {/* Left */}
+          <div className="max-w-xl">
+
+            <div className="flex items-center gap-5 mb-8">
+              <span className="text-[10px] tracking-[0.25em] uppercase text-muted-high font-bold">
+                004
+              </span>
+
+              <div className="w-10 h-px bg-foreground/15" />
+
+              <span className="text-[10px] tracking-[0.25em] uppercase text-muted-high font-bold">
+                Archive
+              </span>
+            </div>
+
+            <h2 className="text-6xl sm:text-7xl lg:text-8xl font-black leading-[0.88] tracking-[-0.05em] uppercase">
+              More
+              <br />
+              <span className="text-muted-low">Moments</span>
             </h2>
 
-            <p className="text-lg md:text-xl font-light text-foreground/55 max-w-xl leading-relaxed">
-              Check out the rest of what I've got. All the photos, no filters, just Nepal and a camera.
+            <p className="mt-8 max-w-sm text-muted-high leading-relaxed">
+              More streets, mountains, quiet mornings and places that happened
+              to be worth stopping for.
             </p>
 
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ delay: 0.3, duration: 0.6 }}
-              viewport={{ once: true }}
-              className="pt-6"
+          </div>
+
+          {/* Right */}
+          <div className="flex flex-col items-start lg:items-end justify-between gap-16">
+
+            <div className="text-left lg:text-right">
+              <div className="text-6xl font-black tabular-nums">
+                {photos.length}
+              </div>
+
+              <div className="mt-2 text-[10px] tracking-[0.25em] uppercase text-muted-high">
+                Photographs
+              </div>
+            </div>
+
+            <Link
+              href="/gallery"
+              className="group inline-flex items-end gap-6"
             >
-              <Link
-                href="/gallery"
-                className="group inline-flex items-baseline gap-4 border-b border-foreground/20 pb-3 hover:border-foreground/60 transition-colors duration-300"
-              >
-                <span className="text-2xl md:text-3xl font-light tracking-tight text-foreground">
-                  See All
-                </span>
-                <span className="text-accent text-2xl transition-transform duration-300 ease-out group-hover:translate-x-2">
-                  →
-                </span>
-              </Link>
-            </motion.div>
-          </motion.div>
+              <span className="text-3xl md:text-5xl font-black tracking-[-0.03em] uppercase">
+                Explore Archive
+              </span>
+
+              <span className="mb-2 text-lg transition-transform duration-300 group-hover:translate-x-2">
+                →
+              </span>
+            </Link>
+
+          </div>
+
         </div>
       </section>
 

@@ -1,61 +1,51 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Sun, Moon } from 'lucide-react'
-import { motion } from 'framer-motion'
 
 export function ThemeToggle() {
-  const [theme, setTheme] = useState<'light' | 'dark' | 'system'>('system')
+  const [theme, setTheme] = useState<'light' | 'dark'>('dark')
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
     setMounted(true)
-    const stored = localStorage.getItem('theme') as 'light' | 'dark' | 'system' | null
-    setTheme(stored || 'system')
+    const stored = localStorage.getItem('theme') as 'light' | 'dark' | null
+    if (stored) {
+      setTheme(stored)
+    } else {
+      setTheme(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+    }
   }, [])
 
   useEffect(() => {
     if (!mounted) return
 
     const root = document.documentElement
-    let resolvedTheme = theme
-
-    if (theme === 'system') {
-      resolvedTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-    }
-
-    if (resolvedTheme === 'dark') {
+    if (theme === 'dark') {
       root.classList.add('dark')
       root.classList.remove('light')
     } else {
       root.classList.add('light')
       root.classList.remove('dark')
     }
-
     localStorage.setItem('theme', theme)
   }, [theme, mounted])
 
-  if (!mounted) return <div className="w-8 h-8" />
+  if (!mounted) return <div className="w-8 h-3" />
 
-  const toggleTheme = () => {
-    setTheme(current => {
-      if (current === 'light') return 'dark'
-      if (current === 'dark') return 'system'
-      return 'light'
-    })
-  }
+  const toggleTheme = () => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))
 
   return (
-    <motion.button
+    <button
       onClick={toggleTheme}
-      whileHover={{ scale: 1.1 }}
-      whileTap={{ scale: 0.95 }}
-      className="p-2 rounded transition-colors hover:bg-foreground/5"
-      aria-label="Toggle theme"
+      className="group relative overflow-hidden inline-flex flex-col leading-none cursor-pointer transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] hover:scale-105"
+      aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
     >
-      {theme === 'dark' && <Moon className="w-5 h-5" />}
-      {theme === 'light' && <Sun className="w-5 h-5" />}
-      {theme === 'system' && <Sun className="w-5 h-5" />}
-    </motion.button>
+      <span className="block text-[11px] tracking-[0.18em] uppercase font-medium text-muted-high transition-all duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:-translate-y-full group-hover:text-foreground">
+        {theme === 'dark' ? 'Dark' : 'Light'}
+      </span>
+      <span className="absolute top-full block text-[11px] tracking-[0.18em] uppercase font-semibold text-foreground transition-all duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:-translate-y-full">
+        {theme === 'dark' ? 'Light' : 'Dark'}
+      </span>
+    </button>
   )
 }

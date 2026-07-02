@@ -3,92 +3,123 @@
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 
+const navLinks = [
+  { href: '/', label: 'Index' },
+  { href: '/gallery', label: 'Gallery' },
+  { href: '/contact', label: 'Contact' },
+]
+
+function FooterLink({ href, label }: { href: string; label: string }) {
+  return (
+    <Link
+      href={href}
+      className="group relative overflow-hidden inline-flex flex-col leading-none"
+    >
+      <span className="block text-sm font-light text-muted-high transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:-translate-y-full group-hover:text-muted-high">
+        {label}
+      </span>
+      <span className="absolute top-full block text-sm font-light text-foreground transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:-translate-y-full">
+        {label}
+      </span>
+    </Link>
+  )
+}
+
 export function Footer() {
   return (
     <motion.footer
       initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true }}
       transition={{ duration: 0.8 }}
-      className="border-t border-foreground/5 bg-background py-20 md:py-24"
+      className="border-t border-foreground/10 bg-background pt-16 pb-10 md:pt-20 md:pb-12"
     >
-      <div className="max-w-7xl mx-auto px-6 md:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-16 mb-16">
-          {/* About */}
+      <div className="max-w-screen-xl mx-auto px-8 md:px-12">
+
+        {/* Top row — wordmark + nav */}
+        <div className="flex flex-col md:flex-row md:items-start justify-between gap-12 mb-20">
+
+          {/* Wordmark block */}
           <div className="space-y-4">
-            <h3 className="text-xs font-light tracking-widest uppercase text-foreground/40">
-              About
-            </h3>
-            <p className="text-sm font-light text-foreground/60 leading-relaxed">
-              A collection of photographs exploring light, form, and the moments in between.
+            <Link href="/" className="group relative overflow-hidden inline-flex flex-col leading-none">
+              <span className="block text-xl font-black tracking-[-0.02em] uppercase text-foreground transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:-translate-y-full">
+                Photo Diary
+              </span>
+              <span className="absolute top-full block text-xl font-black tracking-[-0.02em] uppercase text-muted-high transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:-translate-y-full">
+                Photo Diary
+              </span>
+            </Link>
+            <p className="text-xs font-light text-muted-high max-w-[200px] leading-relaxed">
+              A collection of photographs from Nepal and beyond.
             </p>
           </div>
 
-          {/* Navigate */}
-          <div className="space-y-4">
-            <h3 className="text-xs font-light tracking-widest uppercase text-foreground/40">
+          {/* Navigation links */}
+          <div className="space-y-3">
+            <span className="block text-[10px] tracking-[0.2em] uppercase text-muted-med font-bold mb-5">
               Navigate
-            </h3>
-            <ul className="space-y-2.5">
-              <li>
-                <Link href="/" className="text-sm font-light text-foreground/60 hover:text-foreground transition-colors duration-300">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link href="/gallery" className="text-sm font-light text-foreground/60 hover:text-foreground transition-colors duration-300">
-                  Gallery
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="text-sm font-light text-foreground/60 hover:text-foreground transition-colors duration-300">
-                  Contact
-                </Link>
-              </li>
-            </ul>
+            </span>
+            {navLinks.map((link) => (
+              <div key={link.href}>
+                <FooterLink {...link} />
+              </div>
+            ))}
           </div>
 
           {/* Connect */}
-          <div className="space-y-4">
-            <h3 className="text-xs font-light tracking-widest uppercase text-foreground/40">
+          <div className="space-y-3">
+            <span className="block text-[10px] tracking-[0.2em] uppercase text-muted-med font-bold mb-5">
               Connect
-            </h3>
-            <ul className="space-y-2.5">
-              <li>
-                <a href="#" className="text-sm font-light text-foreground/60 hover:text-foreground transition-colors duration-300">
-                  Instagram
+            </span>
+            {['Instagram', 'Twitter', 'Mastodon'].map((name) => (
+              <div key={name}>
+                <a
+                  href="#"
+                  className="group relative overflow-hidden inline-flex flex-col leading-none"
+                >
+                  <span className="block text-sm font-light text-muted-high transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:-translate-y-full">
+                    {name}
+                  </span>
+                  <span className="absolute top-full block text-sm font-light text-foreground transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:-translate-y-full">
+                    {name}
+                  </span>
                 </a>
-              </li>
-              <li>
-                <a href="#" className="text-sm font-light text-foreground/60 hover:text-foreground transition-colors duration-300">
-                  Twitter
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-sm font-light text-foreground/60 hover:text-foreground transition-colors duration-300">
-                  Mastodon
-                </a>
-              </li>
-            </ul>
+              </div>
+            ))}
           </div>
 
           {/* Contact */}
-          <div className="space-y-4">
-            <h3 className="text-xs font-light tracking-widest uppercase text-foreground/40">
+          <div className="space-y-4 max-w-[200px]">
+            <span className="block text-[10px] tracking-[0.2em] uppercase text-muted-med font-bold">
               Get in Touch
-            </h3>
-            <p className="text-sm font-light text-foreground/60 leading-relaxed">
-              Interested in commissions or collaborations?
+            </span>
+            <p className="text-xs font-light text-muted-high leading-relaxed">
+              Interested in collaborations or commissions?
             </p>
-            <a href="/contact" className="inline-block text-sm font-light text-accent hover:text-foreground transition-colors duration-300">
-              Send a message →
-            </a>
+            <Link
+              href="/contact"
+              className="group inline-flex items-center gap-4 pt-2"
+            >
+              <span className="relative flex flex-col leading-none overflow-hidden h-[1em]">
+                <span className="block text-[11px] tracking-[0.18em] uppercase font-medium text-muted-high transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:-translate-y-full">
+                  Say hello
+                </span>
+                <span className="absolute top-full block text-[11px] tracking-[0.18em] uppercase font-medium text-foreground transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:-translate-y-full">
+                  Say hello
+                </span>
+              </span>
+              <span className="w-6 h-px bg-muted-high group-hover:w-12 transition-all duration-500 ease-[cubic-bezier(0.76,0,0.24,1)]" />
+            </Link>
           </div>
         </div>
 
-        {/* Divider */}
-        <div className="border-t border-foreground/5 pt-8">
-          <p className="text-xs font-light text-foreground/30">
-            © {new Date().getFullYear()} Photography Archive. All rights reserved.
+        {/* Bottom bar */}
+        <div className="border-t border-foreground/10 pt-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <p className="text-[10px] font-light text-muted-med tracking-[0.1em]">
+            © {new Date().getFullYear()} Photo Diary. All rights reserved.
+          </p>
+          <p className="text-[10px] font-light text-muted-med tracking-[0.1em] uppercase">
+            Kathmandu, Nepal
           </p>
         </div>
       </div>
