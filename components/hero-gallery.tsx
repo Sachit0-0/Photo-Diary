@@ -6,18 +6,20 @@ import Image from 'next/image'
 import { useScroll, useTransform, motion, MotionValue } from 'framer-motion'
 import { useRef, useEffect, useState, useCallback, useMemo } from 'react'
 import Link from 'next/link'
-import { photos, Photo } from '@/lib/data'
+import type { Photo } from '@/sanity/queries'
 
 interface Picture {
     photo: Photo
     scale: MotionValue<number>
 }
 
-export default function AnimatedGallery() {
+interface AnimatedGalleryProps {
+    photos: Photo[]
+}
+
+export default function AnimatedGallery({ photos }: AnimatedGalleryProps) {
     const container = useRef<HTMLDivElement>(null)
     const [isMounted, setIsMounted] = useState(false)
-    // Store only the selected photos in state — scales are derived separately
-    // so we never rebuild the six MotionValues (and their subscriptions) after mount.
     const [selectedPhotos, setSelectedPhotos] = useState<Photo[]>([])
 
     const { scrollYProgress } = useScroll({
@@ -25,23 +27,17 @@ export default function AnimatedGallery() {
         offset: ['start start', 'end end'],
     })
 
-    // Direct 1:1 mapping to scroll — smoothness now comes from Lenis
-    // interpolating the underlying scroll position itself (see
-    // components/smooth-scroll.tsx), not from lagging the transform.
     const scale4 = useTransform(scrollYProgress, [0, 1], [1, 4])
     const scale5 = useTransform(scrollYProgress, [0, 1], [1, 5])
     const scale6 = useTransform(scrollYProgress, [0, 1], [1, 6])
     const scale8 = useTransform(scrollYProgress, [0, 1], [1, 8])
 
-    // Scales are fixed MotionValues created once per render tree — memoize the
-    // array reference itself, not the random photo selection (which must stay
-    // client-only to avoid hydration mismatches).
     const scales = useMemo(() => [scale4, scale5, scale6, scale5, scale6, scale8], [scale4, scale5, scale6, scale8])
 
     const selectRandomPhotos = useCallback(() => {
         const shuffled = [...photos].sort(() => 0.5 - Math.random())
         return shuffled.slice(0, 6)
-    }, [])
+    }, [photos])
 
     useEffect(() => {
         setSelectedPhotos(selectRandomPhotos())
@@ -76,9 +72,6 @@ export default function AnimatedGallery() {
                                     src={photo.url}
                                     fill
                                     alt={photo.title}
-                                    // Images scale up to 8x on scroll, so request a source large
-                                    // enough that it stays sharp at full zoom rather than being
-                                    // upscaled from a viewport-sized optimized image.
                                     sizes="(max-width: 768px) 400vw, 200vw"
                                     quality={90}
                                     priority={index < 2}

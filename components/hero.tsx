@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
-import { photos, type Photo } from "@/lib/data";
+import type { Photo } from '@/sanity/queries'
 import { KineticText } from './ui/kinetic-text'
 
 function SplitText({ text, className, delay = 0 }: { text: string; className?: string; delay?: number }) {
@@ -65,7 +65,6 @@ function CameraIcon() {
   )
 }
 
-// Small viewfinder-style corner bracket, echoes a camera focus frame.
 function CornerBracket({ className }: { className?: string }) {
   return (
     <motion.svg
@@ -83,7 +82,6 @@ function CornerBracket({ className }: { className?: string }) {
   )
 }
 
-// Rule-of-thirds composition grid — a real photographic tool, faint, full-bleed.
 function CompositionGrid() {
   return (
     <motion.svg
@@ -101,7 +99,6 @@ function CompositionGrid() {
   )
 }
 
-// Film sprocket holes running down the left edge, like the edge of a 35mm strip.
 function FilmSprockets() {
   const count = 14
   return (
@@ -136,7 +133,6 @@ function FilmSprockets() {
   )
 }
 
-// Compass rose — pairs with the lat/long coordinate stamp.
 function CompassRose({ className }: { className?: string }) {
   return (
     <motion.svg
@@ -157,12 +153,15 @@ function CompassRose({ className }: { className?: string }) {
   )
 }
 
-export function Hero() {
+interface HeroProps {
+  photos: Photo[]
+}
+
+export function Hero({ photos }: HeroProps) {
   const shouldReduceMotion = useReducedMotion()
   const previewPhotos = photos.slice(0, 4)
   const [activePhoto, setActivePhoto] = useState<Photo | null>(null)
   const [scrollHovered, setScrollHovered] = useState(false)
-  const categoriesCount = new Set(photos.map(p => p.category)).size
   const [heroSettled, setHeroSettled] = useState(false)
 
   return (
@@ -194,19 +193,14 @@ export function Hero() {
         </AnimatePresence>
       </div>
 
-      {/* Rule-of-thirds composition grid — faint, full-bleed graphic */}
       <CompositionGrid />
-
-      {/* Film sprocket holes along the left edge */}
       <FilmSprockets />
 
-      {/* Viewfinder corner brackets — subtle frame around the whole hero */}
       <CornerBracket className="absolute top-6 left-6 text-foreground/50 hidden sm:block" />
       <CornerBracket className="absolute top-6 right-6 text-foreground/50 hidden sm:block -scale-x-100" />
       <CornerBracket className="absolute bottom-6 left-6 text-foreground/50 hidden sm:block -scale-y-100" />
       <CornerBracket className="absolute bottom-6 right-6 text-foreground/50 hidden sm:block -scale-100" />
 
-      {/* Top-left: label + coordinate stamp */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -225,7 +219,6 @@ export function Hero() {
         </div>
       </motion.div>
 
-      {/* Top-right: archive label + live shooting indicator */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -257,14 +250,10 @@ export function Hero() {
               <span className="block text-[10px] tracking-[0.2em] uppercase font-bold text-foreground">
                 {activePhoto.title}
               </span>
-              <span className="block text-[9px] tracking-[0.15em] uppercase text-muted-high font-medium">
-                {activePhoto.location}
-              </span>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
-
 
       <motion.div
         initial={{ opacity: 0, x: 30 }}
@@ -296,7 +285,6 @@ export function Hero() {
                 className="object-cover"
                 loading="lazy"
               />
-              {/* Tiny focus reticle, appears on the active thumbnail only */}
               {isActive && (
                 <motion.span
                   initial={{ opacity: 0, scale: 0.6 }}
@@ -321,12 +309,7 @@ export function Hero() {
         <span className="text-[8px] tracking-[0.2em] uppercase text-muted-med font-medium text-center mt-1">
           {photos.length} Photos
         </span>
-
-
-
-
       </motion.div>
-
 
       {/* Main headline — massive */}
       <h1
@@ -359,7 +342,6 @@ export function Hero() {
               </motion.span>
             </span>
 
-
             <span className="block overflow-hidden">
               <motion.span
                 initial={{ opacity: 0, y: 20 }}
@@ -386,7 +368,6 @@ export function Hero() {
         transition={{ duration: 0.9, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}
         className="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-8 mt-10 md:mt-16 pt-6 md:pt-8 border-t-[1.5px] border-foreground/15"
       >
-        {/* Left: description */}
         <div className="max-w-xs space-y-2">
           <p className="text-sm md:text-base font-light text-muted-high leading-relaxed">
             A small, unsorted collection of photos taken over the years{' '}
@@ -398,13 +379,11 @@ export function Hero() {
             </span>{' '}
             kept exactly as random as they happened.
           </p>
-          {/* EXIF-style metadata line, quiet nod to the medium */}
           <span className="block text-[9px] tracking-[0.15em] uppercase text-muted-med tabular-nums">
             f/2.8 · 1/125 · ISO 200
           </span>
         </div>
 
-        {/* Center: stats — condensed on mobile, full on desktop */}
         <div className="flex items-center gap-4 sm:gap-6 md:gap-8 text-muted-med">
           <div className="text-center">
             <span className="block text-lg sm:text-xl md:text-2xl font-black tabular-nums text-foreground">{photos.length}</span>
@@ -418,9 +397,6 @@ export function Hero() {
             <span className="text-[9px] tracking-[0.2em] uppercase font-medium text-muted-high">Old Camera</span>
           </div>
         </div>
-
-        {/* Right: CTA — always visible; the thumbnail strip's link is xl-only */}
-
       </motion.div>
 
       {/* Scroll indicator — centered at the bottom */}

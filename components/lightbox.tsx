@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useEffect } from 'react'
-import type { Photo } from '@/lib/data'
+import type { Photo } from '@/sanity/queries'
 
 interface LightboxProps {
   photo: Photo
@@ -46,9 +46,6 @@ export function Lightbox({
           <div className="flex flex-col">
             <span className="text-[10px] tracking-[0.2em] uppercase font-medium">
               {String(currentIndex + 1).padStart(3, '0')} — {String(totalCount).padStart(3, '0')}
-            </span>
-            <span className="text-[10px] tracking-[0.2em] uppercase font-medium text-white/50 mt-1">
-              {photo.location}
             </span>
           </div>
 

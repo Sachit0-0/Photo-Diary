@@ -3,7 +3,7 @@
 import { memo, useCallback, useRef, useState } from 'react'
 import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion'
 import Image from 'next/image'
-import type { Photo } from '@/lib/data'
+import type { Photo } from '@/sanity/queries'
 import { Lightbox } from './lightbox'
 
 const MotionImage = motion.create(Image)
