@@ -275,7 +275,7 @@ export function Hero({ photos }: HeroProps) {
                 duration: 0.6,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className={`relative w-16 h-20 overflow-hidden transition-all duration-500 cursor-pointer border ${isActive ? 'border-foreground' : 'border-transparent grayscale'}`}
+              className={`relative w-16 h-20 overflow-hidden transition-all duration-500 cursor-pointer border ${isActive ? 'border-foreground' : 'border-transparent'}`}
             >
               <Image
                 src={photo.url}

@@ -71,7 +71,7 @@ export function Footer() {
             <span className="block text-[10px] tracking-[0.2em] uppercase text-muted-med font-bold mb-5">
               Connect
             </span>
-            {['Instagram', 'Twitter', 'Mastodon'].map((name) => (
+            {['Instagram', 'Twitter'].map((name) => (
               <div key={name}>
                 <a
                   href="#"
@@ -94,7 +94,7 @@ export function Footer() {
               Get in Touch
             </span>
             <p className="text-xs font-light text-muted-high leading-relaxed">
-              Interested in collaborations or commissions?
+              wanna collaborate or commission?
             </p>
             <Link
               href="/contact"

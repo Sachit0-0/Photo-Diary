@@ -7,7 +7,6 @@
         overflow: hidden;
         top: 0;
         height: 100vh;
-        height: 100svh;
 
         .el {
             width: 100%;
@@ -71,53 +70,13 @@
                     height: 25vh;
                 }
             }
-        }
 
-        // Below this width, vh-based heights combined with vw-based widths
-        // produce extremely tall, narrow crops (portrait aspect ratios are
-        // the opposite of what this collage was designed for). Re-anchor
-        // every box's height to vw as well, so width and height scale off
-        // the same axis and stay landscape-ish in any orientation.
-        @media (max-width: 768px) {
-            .el {
+            &:nth-of-type(7) {
                 .imageContainer {
-                    width: 42vw;
-                    height: 32vw;
-                }
-
-                &:nth-of-type(2) .imageContainer {
-                    top: -20vh;
-                    left: 2vw;
-                    width: 50vw;
-                    height: 38vw;
-                }
-
-                &:nth-of-type(3) .imageContainer {
-                    top: -6vh;
-                    left: -20vw;
-                    width: 30vw;
-                    height: 44vw;
-                }
-
-                &:nth-of-type(4) .imageContainer {
-                    top: 0;
-                    left: 26vw;
-                    width: 40vw;
-                    height: 32vw;
-                }
-
-                &:nth-of-type(5) .imageContainer {
-                    top: 20vh;
-                    left: 0;
-                    width: 30vw;
-                    height: 30vw;
-                }
-
-                &:nth-of-type(6) .imageContainer {
-                    top: 20vh;
-                    left: -18vw;
-                    width: 36vw;
-                    height: 30vw;
+                    top: 22.5vh;
+                    left: 25vw;
+                    width: 15vw;
+                    height: 15vh;
                 }
             }
         }
