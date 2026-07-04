@@ -30,7 +30,7 @@ export default function RootLayout({
     <html lang="en" className={inter.variable} >
       <body className="font-sans antialiased bg-background text-foreground">
         <SmoothScroll>
-                <Navigation />
+
           {children}
         </SmoothScroll>
       </body>
