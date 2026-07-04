@@ -15,7 +15,7 @@ function CameraIcon() {
     <motion.svg
       viewBox="0 0 200 200"
       aria-hidden="true"
-      className="w-10 h-10 xs:w-12 xs:h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 inline-block ml-2 md:ml-6 -translate-y-3 md:-translate-y-6 text-foreground/80"
+      className="w-[0.9em] h-[0.9em] inline-block ml-[0.15em] -translate-y-[0.12em] text-foreground/80 align-middle shrink-0"
       initial={{ opacity: 0, scale: 0.8, rotate: -6 }}
       animate={
         shouldReduceMotion
@@ -98,7 +98,7 @@ function CornerBracket({ className }: { className?: string }) {
 function CompositionGrid() {
   return (
     <motion.svg
-      className="absolute inset-0 w-full h-full text-foreground pointer-events-none"
+      className="absolute inset-0 w-full h-full text-foreground pointer-events-none hidden sm:block"
       preserveAspectRatio="none"
       aria-hidden="true"
       initial={{ opacity: 0 }}
@@ -270,7 +270,7 @@ export function Hero({ photos }: HeroProps) {
   const [heroSettled, setHeroSettled] = useState(false)
 
   return (
-    <div className="relative w-full min-h-[100svh] flex flex-col justify-end pb-24 sm:pb-16 md:pb-24 px-5 sm:px-8 md:px-12 pt-16 sm:pt-0 overflow-hidden">
+    <div className="relative w-full min-h-[100svh] flex flex-col justify-between px-5 sm:px-8 md:px-12 pt-20 sm:pt-24 md:pt-28 pb-6 md:pb-8 overflow-hidden">
       <MomentsGrainFilter />
 
       {/* Dynamic Background Image Crossfade (Visible only when hovering/focusing a thumbnail) */}
@@ -293,7 +293,7 @@ export function Hero({ photos }: HeroProps) {
                 sizes="100vw"
                 className="object-cover"
               />
-              <div className="absolute inset-0 bg-background/30 dark:bg-background/70" />
+              <div className="absolute inset-0 bg-background/75 dark:bg-background/80 transition-colors duration-500" />
             </motion.div>
           )}
         </AnimatePresence>
@@ -308,46 +308,46 @@ export function Hero({ photos }: HeroProps) {
       <CornerBracket className="absolute bottom-6 left-6 hidden sm:block -scale-y-100" />
       <CornerBracket className="absolute bottom-6 right-6 hidden sm:block -scale-100" />
 
+      {/* 1. TOP BAR METADATA ROW */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.2, delay: 0.2 }}
-        className="absolute top-20 sm:top-20 md:top-28 left-5 sm:left-8 md:left-12 flex flex-col gap-1.5 sm:gap-2 z-10 max-w-[62vw] sm:max-w-none"
+        className="relative z-10 w-full flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-6 mt-2 sm:mt-0"
       >
-        <div className="flex items-center gap-2 sm:gap-3 text-[9px] md:text-xs lg:text-sm font-bold tracking-[0.18em] sm:tracking-[0.25em] uppercase text-foreground/75">
-          <span className="text-foreground/55">01 /</span>
-          <span>Just Clicks from Nepal</span>
+        {/* Left Side: Coordinates and Series */}
+        <div className="flex flex-col gap-1.5 sm:gap-2 max-w-full sm:max-w-none">
+          <div className="flex items-center gap-2 sm:gap-3 text-[10px] md:text-xs tracking-[0.12em] sm:tracking-[0.18em] md:tracking-[0.25em] uppercase font-bold text-foreground/75">
+            <span className="text-foreground/45">01 /</span>
+            <span>Just Clicks from Nepal</span>
+          </div>
+          <div className="relative flex items-center gap-2 px-2.5 py-1 w-fit">
+            <span className="absolute top-0 left-0 w-2 h-2 border-t border-l border-foreground/50 dark:border-foreground/35" aria-hidden="true" />
+            <span className="absolute top-0 right-0 w-2 h-2 border-t border-r border-foreground/50 dark:border-foreground/35" aria-hidden="true" />
+            <span className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-foreground/50 dark:border-foreground/35" aria-hidden="true" />
+            <span className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-foreground/50 dark:border-foreground/35" aria-hidden="true" />
+            <span className="text-[9px] sm:text-[10px] lg:text-xs tracking-[0.08em] sm:tracking-[0.15em] text-foreground/70 tabular-nums font-mono">
+              27.7172° N, 85.3240° E
+            </span>
+            <CompassRose className="text-foreground/80 hidden xs:block shrink-0" />
+          </div>
         </div>
-        <div className="relative flex items-center gap-2 px-2.5 py-1">
-          <span className="absolute top-0 left-0 w-2 h-2 border-t border-l border-foreground/70 dark:border-foreground/55" aria-hidden="true" />
-          <span className="absolute top-0 right-0 w-2 h-2 border-t border-r border-foreground/70 dark:border-foreground/55" aria-hidden="true" />
-          <span className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-foreground/70 dark:border-foreground/55" aria-hidden="true" />
-          <span className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-foreground/70 dark:border-foreground/55" aria-hidden="true" />
-          <span className="text-[8px] sm:text-[9px] md:text-[10px] lg:text-xs tracking-[0.15em] sm:tracking-[0.2em] text-foreground/70 tabular-nums">
-            27.7172° N, 85.3240° E
+
+        {/* Right Side: Status Indicator */}
+        <div className="flex items-center gap-1.5 sm:gap-2 self-start sm:self-center">
+          <motion.span
+            className="w-1.5 h-1.5 rounded-full bg-orange-600 dark:bg-orange-400 shrink-0"
+            aria-hidden="true"
+            animate={shouldReduceMotion ? {} : { opacity: [1, 0.35, 1] }}
+            transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut', delay: 1.6 }}
+          />
+          <span className="text-[10px] md:text-xs tracking-[0.12em] sm:tracking-[0.18em] md:tracking-[0.25em] uppercase text-foreground/75 font-bold whitespace-nowrap">
+            <span className="hidden sm:inline">Photography </span>Archive
           </span>
-          <CompassRose className="text-foreground hidden xs:block" />
         </div>
       </motion.div>
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1.2, delay: 0.3 }}
-        className="absolute top-20 sm:top-20 md:top-28 right-5 sm:right-8 md:right-12 flex items-center gap-1.5 sm:gap-2 z-10"
-      >
-        <motion.span
-          className="w-1.5 h-1.5 rounded-full bg-orange-600 dark:bg-orange-400 shrink-0"
-          aria-hidden="true"
-          animate={shouldReduceMotion ? {} : { opacity: [1, 0.35, 1] }}
-          transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut', delay: 1.6 }}
-        />
-        <span className="text-[9px] sm:text-[10px] md:text-xs lg:text-sm tracking-[0.18em] sm:tracking-[0.25em] uppercase text-foreground/75 font-bold whitespace-nowrap">
-          <span className="hidden sm:inline">Photography </span>Archive
-        </span>
-      </motion.div>
-
-      {/* Floating thumbnail info details */}
+      {/* Floating thumbnail info details (Visible on hover on desktop xl) */}
       <div className="absolute right-36 top-1/2 -translate-y-1/2 text-right hidden xl:block z-10 pointer-events-none">
         <AnimatePresence mode="wait">
           {activePhoto && (
@@ -367,193 +367,219 @@ export function Hero({ photos }: HeroProps) {
         </AnimatePresence>
       </div>
 
-      <motion.div
-        initial={{ opacity: 0, x: 30 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 1.2, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        onMouseLeave={() => setActivePhoto(null)}
-        className="hidden xl:flex absolute right-12 top-1/2 -translate-y-1/2 flex-col items-end gap-3 z-10"
-      >
-        <div className="relative pr-3">
-          {/* perforated edge running down the outside of the filmstrip */}
-          <div className="absolute top-0 bottom-0 right-0 w-3 flex flex-col justify-between py-1" aria-hidden="true">
-            {previewPhotos.map((_, i) => (
-              <span key={i} className="w-1.5 h-1.5 rounded-full border border-foreground/40 dark:border-foreground/25" />
-            ))}
+      {/* 2. MIDDLE AREA (Headline and Filmstrip side-by-side on xl) */}
+      <div className="relative z-10 my-auto py-4 sm:py-6 md:py-8 w-full flex flex-col xl:flex-row xl:items-end xl:justify-between gap-6 xl:gap-8">
+        
+        {/* Left Column: Heading */}
+        <div className="max-w-full xl:max-w-[72%]">
+          <h1
+            className="text-[clamp(2.35rem,9.5vw,8.5rem)] font-black tracking-[-0.03em] xl:tracking-[-0.04em] leading-[0.85] text-foreground uppercase select-none break-words [contain:layout_paint]"
+            aria-label="Random Moments"
+          >
+            {shouldReduceMotion ? (
+              <>
+                <span className="block">Random</span>
+                <span className="block text-foreground/55 dark:text-foreground/45">
+                  <span style={{ filter: 'url(#moments-text-grain)' }}>Moments</span>
+                  <CameraIcon />
+                </span>
+              </>
+            ) : (
+              <>
+                <span className="block overflow-hidden">
+                  <motion.span
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.9, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                    onAnimationComplete={() => setHeroSettled(true)}
+                    className="block will-change-transform transform-gpu isolate"
+                  >
+                    <KineticText
+                      as="span"
+                      text="Random"
+                      className={`font-[inherit] ${heroSettled ? '' : 'pointer-events-none'}`}
+                    />
+                  </motion.span>
+                </span>
+
+                <span className="block overflow-hidden">
+                  <motion.span
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.9, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                    className="flex flex-wrap items-baseline will-change-transform transform-gpu isolate"
+                  >
+                    <span style={{ filter: 'url(#moments-text-grain)' }} className="inline-block">
+                      <KineticText
+                        as="span"
+                        text="Moments"
+                        className={`text-foreground/55 dark:text-foreground/45 font-[inherit] ${heroSettled ? '' : 'pointer-events-none'}`}
+                      />
+                    </span>
+                    <CameraIcon />
+                  </motion.span>
+                </span>
+              </>
+            )}
+          </h1>
+        </div>
+
+        {/* Right Column: Filmstrip (xl screens only) */}
+        <motion.div
+          initial={{ opacity: 0, x: 30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1.2, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          onMouseLeave={() => setActivePhoto(null)}
+          className="hidden xl:flex flex-col items-end gap-3 z-10 shrink-0"
+        >
+          <div className="relative pr-3">
+            {/* perforated edge running down the outside of the filmstrip */}
+            <div className="absolute top-0 bottom-0 right-0 w-3 flex flex-col justify-between py-1" aria-hidden="true">
+              {previewPhotos.map((_, i) => (
+                <span key={i} className="w-1.5 h-1.5 rounded-full border border-foreground/40 dark:border-foreground/25" />
+              ))}
+            </div>
+
+            <ul className="flex flex-col items-end gap-3 list-none">
+              {previewPhotos.map((photo, index) => {
+                const isActive = activePhoto?.id === photo.id
+                const frameCode = `${24 + index}A`
+                return (
+                  <li key={photo.id} className="relative">
+                    <span
+                      aria-hidden="true"
+                      className="absolute -top-1.5 left-0.5 z-10 font-mono text-[7px] lg:text-[8px] tracking-[0.1em] text-background bg-foreground/90 px-1 py-px rounded-[2px]"
+                    >
+                      {frameCode}
+                    </span>
+                    <motion.button
+                      type="button"
+                      aria-label={`Preview photo: ${photo.title}`}
+                      aria-pressed={isActive}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: isActive ? 1 : 0.7, y: 0 }}
+                      whileHover={{ opacity: 1, scale: 1.05 }}
+                      whileFocus={{ opacity: 1, scale: 1.05 }}
+                      onMouseEnter={() => setActivePhoto(photo)}
+                      onFocus={() => setActivePhoto(photo)}
+                      onBlur={() => setActivePhoto(null)}
+                      transition={{
+                        duration: 0.6,
+                        ease: [0.16, 1, 0.3, 1],
+                      }}
+                      className={`relative rounded-[4px] block w-14 h-16 2xl:w-16 2xl:h-20 overflow-hidden transition-all duration-500 cursor-pointer border-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background ${isActive ? 'border-foreground' : 'border-foreground/35 dark:border-foreground/25'}`}
+                    >
+                      <Image
+                        src={photo.url}
+                        alt={photo.title}
+                        fill
+                        sizes="64px"
+                        className="object-cover"
+                        loading="lazy"
+                      />
+                      {isActive && (
+                        <motion.span
+                          aria-hidden="true"
+                          initial={{ opacity: 0, scale: 0.6 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ duration: 0.3 }}
+                          className="absolute top-1 right-1 w-2 h-2 border-t border-r border-background/90"
+                        />
+                      )}
+                    </motion.button>
+                  </li>
+                )
+              })}
+            </ul>
           </div>
 
-          <ul className="flex flex-col items-end gap-3 list-none">
-            {previewPhotos.map((photo, index) => {
-              const isActive = activePhoto?.id === photo.id
-              const frameCode = `${24 + index}A`
-              return (
-                <li key={photo.id} className="relative">
-                  <span
-                    aria-hidden="true"
-                    className="absolute -top-1.5 left-0.5 z-10 font-mono text-[7px] lg:text-[8px] tracking-[0.1em] text-background bg-foreground/90 px-1 py-px rounded-[2px]"
-                  >
-                    {frameCode}
-                  </span>
-                  <motion.button
-                    type="button"
-                    aria-label={`Preview photo: ${photo.title}`}
-                    aria-pressed={isActive}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: isActive ? 1 : 0.7, y: 0 }}
-                    whileHover={{ opacity: 1, scale: 1.05 }}
-                    whileFocus={{ opacity: 1, scale: 1.05 }}
-                    onMouseEnter={() => setActivePhoto(photo)}
-                    onFocus={() => setActivePhoto(photo)}
-                    onBlur={() => setActivePhoto(null)}
-                    transition={{
-                      duration: 0.6,
-                      ease: [0.16, 1, 0.3, 1],
-                    }}
-                    className={`relative rounded-[4px] block w-16 h-20 overflow-hidden transition-all duration-500 cursor-pointer border-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background ${isActive ? 'border-foreground' : 'border-foreground/35 dark:border-foreground/25'}`}
-                  >
-                    <Image
-                      src={photo.url}
-                      alt={photo.title}
-                      fill
-                      sizes="64px"
-                      className="object-cover"
-                      loading="lazy"
-                    />
-                    {isActive && (
-                      <motion.span
-                        aria-hidden="true"
-                        initial={{ opacity: 0, scale: 0.6 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.3 }}
-                        className="absolute top-1 right-1 w-2 h-2 border-t border-r border-background/90"
-                      />
-                    )}
-                  </motion.button>
-                </li>
-              )
-            })}
-          </ul>
-        </div>
+          <div className="flex items-center gap-2 mt-2" aria-hidden="true">
+            <span className="w-1 h-1 rounded-full bg-orange-600 dark:bg-orange-400" />
+            <span className="font-mono text-[10px] lg:text-xs tracking-[0.15em] text-foreground/70 tabular-nums">
+              FRAME {String((previewPhotos.findIndex((p) => p.id === activePhoto?.id) ?? -1) + 1 || 1).padStart(2, '0')}
+              /{String(previewPhotos.length).padStart(2, '0')}
+            </span>
+          </div>
 
-        <div className="flex items-center gap-2 mt-2" aria-hidden="true">
-          <span className="w-1 h-1 rounded-full bg-orange-600 dark:bg-orange-400" />
-          <span className="font-mono text-[10px] lg:text-xs tracking-[0.15em] text-foreground/70 tabular-nums">
-            FRAME {String((previewPhotos.findIndex((p) => p.id === activePhoto?.id) ?? -1) + 1 || 1).padStart(2, '0')}
-            /{String(previewPhotos.length).padStart(2, '0')}
+          <div className="flex flex-col items-center gap-3 mt-3">
+            <Button />
+          </div>
+          <span className="text-[8px] lg:text-[10px] tracking-[0.2em] uppercase text-foreground/70 font-medium text-center mt-1">
+            {photos.length} Photos
           </span>
-        </div>
+        </motion.div>
+      </div>
 
-        <div className="flex flex-col items-center gap-4 mt-4">
-          <Button/>
-        </div>
-        <span className="text-[8px] lg:text-[10px] tracking-[0.2em] uppercase text-foreground/70 font-medium text-center mt-1">
-          {photos.length} Photos
-        </span>
-      </motion.div>
-
-      {/* Main headline — massive */}
-      <h1
-        className="text-[16vw] xs:text-[15vw] sm:text-[16vw] md:text-[13vw] lg:text-[11vw] font-black tracking-[-0.02em] sm:tracking-[-0.03em] leading-[0.85] text-foreground uppercase select-none break-words [contain:layout_paint]"
-        aria-label="Random Moments"
-      >
-        {shouldReduceMotion ? (
-          <>
-            <span className="block">Random</span>
-            <span className="block text-foreground/55 dark:text-foreground/45">
-              <span style={{ filter: 'url(#moments-text-grain)' }}>Moments</span>
-              <CameraIcon />
-            </span>
-          </>
-        ) : (
-          <>
-            <span className="">
-              <motion.span
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.9, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                onAnimationComplete={() => setHeroSettled(true)}
-                className="block will-change-transform transform-gpu isolate"
-              >
-                <KineticText
-                  as="span"
-                  text="Random"
-                  className={`font-[inherit] ${heroSettled ? '' : 'pointer-events-none'}`}
-                />
-              </motion.span>
-            </span>
-
-            <span className="block overflow-hidden">
-              <motion.span
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.9, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                className="block will-change-transform transform-gpu isolate"
-              >
-                <span style={{ filter: 'url(#moments-text-grain)' }}>
-                  <KineticText
-                    as="span"
-                    text="Moments"
-                    className={`text-foreground/55 dark:text-foreground/45 font-[inherit] ${heroSettled ? '' : 'pointer-events-none'}`}
-                  />
-                </span>
-                <CameraIcon />
-              </motion.span>
-            </span>
-          </>
-        )}
-      </h1>
-
-      {/* Bottom row — description, stats, CTA */}
+      {/* 3. BOTTOM ROW (description, stats, CTA) */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.9, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}
-        className="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-8 mt-10 md:mt-16 pt-6 md:pt-8 border-t-[1.5px] border-foreground/25 dark:border-foreground/15"
+        className="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6 sm:gap-8 pt-4 sm:pt-6 md:pt-8 border-t-[1.5px] border-foreground/25 dark:border-foreground/15 w-full"
       >
-        <div className="max-w-xs space-y-2">
-          <p className="text-sm md:text-base font-light text-foreground/80 leading-relaxed">
-            A small, unsorted collection of photos taken over the years{' '}
-            <span className="group relative inline-block cursor-help text-foreground/90 hover:text-foreground focus-within:text-foreground transition-colors duration-300">
-              <button
-                type="button"
-                className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-foreground rounded-sm"
-                aria-describedby="em-dash-note"
-              >
-                —
-              </button>
-              <span
-                id="em-dash-note"
-                role="tooltip"
-                className="pointer-events-none absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-max max-w-[180px] rounded-sm border border-foreground/15 dark:border-foreground/10 bg-background px-3 py-1.5 text-[11px] font-light text-foreground/75 opacity-0 scale-95 origin-bottom transition-all duration-200 group-hover:opacity-100 group-hover:scale-100 group-focus-within:opacity-100 group-focus-within:scale-100 shadow-sm shadow-black/10"
-              >
-                yes, a real em dash.
+        {/* Left Column: Description, Technical meta, and CTA Button (on < xl viewports) */}
+        <div className="flex flex-col gap-4 sm:gap-5 max-w-md w-full">
+          <div className="space-y-2 sm:space-y-3">
+            <p className="text-xs sm:text-sm font-light text-foreground/80 leading-relaxed max-w-xs sm:max-w-sm md:max-w-md">
+              A small, unsorted collection of photos taken over the years{' '}
+              <span className="group relative inline-block cursor-help text-foreground/90 hover:text-foreground focus-within:text-foreground transition-colors duration-300">
+                <button
+                  type="button"
+                  className="relative focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-foreground rounded-sm"
+                  aria-describedby="em-dash-note"
+                >
+                  <span className="absolute -inset-3" aria-hidden="true" />
+                  —
+                </button>
+                <span
+                  id="em-dash-note"
+                  role="tooltip"
+                  className="pointer-events-none absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-max max-w-[180px] rounded-sm border border-foreground/15 dark:border-foreground/10 bg-background px-3 py-1.5 text-[11px] font-light text-foreground/75 opacity-0 scale-95 origin-bottom transition-all duration-200 group-hover:opacity-100 group-hover:scale-100 group-focus-within:opacity-100 group-focus-within:scale-100 shadow-sm shadow-black/10"
+                >
+                  yes, a real em dash.
+                </span>
+              </span>{' '}
+              kept exactly as random as they happened.
+            </p>
+            
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+              <span className="block text-[9px] sm:text-[10px] lg:text-[11px] tracking-[0.1em] sm:tracking-[0.15em] uppercase text-foreground/70 tabular-nums font-mono">
+                f/2.8 · 1/125 · ISO 200
               </span>
-            </span>{' '}
-            kept exactly as random as they happened.
-          </p>
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-            <span className="block text-[9px] sm:text-[10px] lg:text-xs tracking-[0.15em] uppercase text-foreground/70 tabular-nums">
-              f/2.8 · 1/125 · ISO 200
-            </span>
-            <span className="hidden xs:block w-px h-3 bg-foreground/35 dark:bg-foreground/25" aria-hidden="true" />
-            <DateStamp date={new Date()} />
+              <span className="hidden xs:block w-px h-3 bg-foreground/35 dark:bg-foreground/25" aria-hidden="true" />
+              <DateStamp date={new Date()} />
+            </div>
+          </div>
+
+          {/* CTA Button for Mobile/Tablet */}
+          <div className="block xl:hidden w-fit">
+            <Button />
           </div>
         </div>
 
-        <div className="flex items-center gap-4 sm:gap-6 md:gap-8 text-foreground/70">
-          <div className="text-center">
-            <span className="block text-lg sm:text-xl md:text-2xl font-black tabular-nums text-foreground">{photos.length}</span>
-            <span className="text-[8px] sm:text-[9px] md:text-[10px] lg:text-[11px] tracking-[0.15em] sm:tracking-[0.2em] uppercase font-medium text-foreground/70">Photos</span>
+        {/* Right Column: Stats (Photos and Camera) */}
+        <div className="flex items-center gap-4 sm:gap-8 md:gap-12 text-foreground/70 self-end sm:self-auto md:self-end">
+          {/* Photos Count */}
+          <div className="text-left">
+            <span className="block text-lg sm:text-xl md:text-2xl lg:text-3xl font-black tabular-nums text-foreground leading-none">
+              {photos.length}
+            </span>
+            <span className="text-[8px] sm:text-[9px] md:text-[10px] lg:text-[11px] tracking-[0.12em] sm:tracking-[0.18em] uppercase font-medium text-foreground/60 block mt-1">
+              Photos
+            </span>
           </div>
-          <div className="w-0.5 h-6 sm:h-8 bg-foreground/25 dark:bg-foreground/15" />
 
-          <div className="hidden sm:block w-[3px] h-8 bg-foreground/25 dark:bg-foreground/15" />
-          <div className="hidden sm:block text-center">
-            <span className="flex items-center justify-center gap-1.5 text-xl md:text-2xl font-black tabular-nums text-foreground">
-              <AperturePulse className="w-4 h-4 md:w-5 md:h-5 text-foreground/80 shrink-0" />
+          <div className="w-px h-6 sm:h-8 bg-foreground/25 dark:bg-foreground/15" aria-hidden="true" />
+
+          {/* Camera Count */}
+          <div className="text-left">
+            <span className="flex items-center gap-1.5 text-lg sm:text-xl md:text-2xl lg:text-3xl font-black tabular-nums text-foreground leading-none">
+              <AperturePulse className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-foreground/80 shrink-0 self-center" />
               1
             </span>
-            <span className="text-[9px] lg:text-[10px] tracking-[0.2em] uppercase font-medium text-foreground/70">Old Camera</span>
+            <span className="text-[8px] sm:text-[9px] md:text-[10px] lg:text-[11px] tracking-[0.12em] sm:tracking-[0.18em] uppercase font-medium text-foreground/60 block mt-1">
+              Old Camera
+            </span>
           </div>
         </div>
       </motion.div>
@@ -567,7 +593,7 @@ export function Hero({ photos }: HeroProps) {
         onHoverStart={() => setScrollHovered(true)}
         onHoverEnd={() => setScrollHovered(false)}
         aria-hidden="true"
-        className="hidden sm:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-3 cursor-default"
+        className="hidden sm:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-3 cursor-default z-10"
       >
         <svg width="10" height="56" viewBox="0 0 10 56" aria-hidden="true" className="text-foreground/70 dark:text-foreground/55 shrink-0">
           <defs>

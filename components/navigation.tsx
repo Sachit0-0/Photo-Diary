@@ -74,14 +74,16 @@ export function Navigation() {
               onClick={() => setMenuOpen((v) => !v)}
               aria-label={menuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={menuOpen}
-              className="group relative overflow-hidden inline-flex flex-col leading-none cursor-pointer transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] hover:scale-105"
+              className="group cursor-pointer transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] hover:scale-105"
             >
-              <span className={`block text-[16px] sm:text-[18px] md:text-[20px] lg:text-[24px] tracking-[0.14em] sm:tracking-[0.16em] md:tracking-[0.18em] uppercase font-medium transition-all duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:-translate-y-full ${menuOpen ? 'text-foreground font-semibold' : 'text-muted-high group-hover:text-foreground'
-                }`}>
-                {menuOpen ? 'Close' : 'Menu'}
-              </span>
-              <span className="absolute top-full block text-[16px] sm:text-[18px] md:text-[20px] lg:text-[24px] tracking-[0.14em] sm:tracking-[0.16em] md:tracking-[0.18em] uppercase font-semibold text-foreground transition-all duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:-translate-y-full">
-                {menuOpen ? 'Close' : 'Menu'}
+              <span className="relative block overflow-hidden leading-none flex flex-col">
+                <span className={`block text-[16px] sm:text-[18px] md:text-[20px] lg:text-[24px] tracking-[0.14em] sm:tracking-[0.16em] md:tracking-[0.18em] uppercase font-medium transition-all duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:-translate-y-full ${menuOpen ? 'text-foreground font-semibold' : 'text-muted-high group-hover:text-foreground'
+                  }`}>
+                  {menuOpen ? 'Close' : 'Menu'}
+                </span>
+                <span className="absolute top-full left-0 right-0 block text-[16px] sm:text-[18px] md:text-[20px] lg:text-[24px] tracking-[0.14em] sm:tracking-[0.16em] md:tracking-[0.18em] uppercase font-semibold text-foreground transition-all duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:-translate-y-full">
+                  {menuOpen ? 'Close' : 'Menu'}
+                </span>
               </span>
             </button>
           </div>

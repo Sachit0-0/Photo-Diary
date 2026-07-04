@@ -37,14 +37,16 @@ export function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="group relative overflow-hidden inline-flex flex-col leading-none cursor-pointer transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] hover:scale-105"
+      className="group cursor-pointer transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] hover:scale-105"
       aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
     >
-      <span className="block text-[18px] tracking-[0.18em] uppercase font-medium text-muted-high transition-all duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:-translate-y-full group-hover:text-foreground">
-        {theme === 'dark' ? 'Dark' : 'Light'}
-      </span>
-      <span className="absolute top-full block text-[18px] tracking-[0.18em] uppercase font-semibold text-foreground transition-all duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:-translate-y-full">
-        {theme === 'dark' ? 'Light' : 'Dark'}
+      <span className="relative block overflow-hidden leading-none flex flex-col">
+        <span className="block text-[18px] tracking-[0.18em] uppercase font-medium text-muted-high transition-all duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:-translate-y-full group-hover:text-foreground">
+          {theme === 'dark' ? 'Dark' : 'Light'}
+        </span>
+        <span className="absolute top-full left-0 right-0 block text-[18px] tracking-[0.18em] uppercase font-semibold text-foreground transition-all duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:-translate-y-full">
+          {theme === 'dark' ? 'Light' : 'Dark'}
+        </span>
       </span>
     </button>
   )
