@@ -4,7 +4,7 @@ import styles from './styles.module.scss'
 
 import Image from 'next/image'
 import { useScroll, useTransform, motion, MotionValue } from 'framer-motion'
-import { useRef, useEffect, useState, useCallback, useMemo } from 'react'
+import { useRef, useEffect, useState, useMemo } from 'react'
 import Link from 'next/link'
 import type { Photo } from '@/sanity/queries'
 
@@ -20,7 +20,10 @@ interface AnimatedGalleryProps {
 export default function AnimatedGallery({ photos }: AnimatedGalleryProps) {
     const container = useRef<HTMLDivElement>(null)
     const [isMounted, setIsMounted] = useState(false)
-    const [selectedPhotos, setSelectedPhotos] = useState<Photo[]>([])
+
+    useEffect(() => {
+        setIsMounted(true)
+    }, [])
 
     const { scrollYProgress } = useScroll({
         target: isMounted ? container : undefined,
@@ -32,27 +35,28 @@ export default function AnimatedGallery({ photos }: AnimatedGalleryProps) {
     const scale6 = useTransform(scrollYProgress, [0, 1], [1, 6])
     const scale8 = useTransform(scrollYProgress, [0, 1], [1, 8])
 
-    const scales = useMemo(() => [scale4, scale5, scale6, scale5, scale6, scale8], [scale4, scale5, scale6, scale8])
+    const scales = useMemo(
+        () => [scale4, scale5, scale6, scale5, scale6, scale8],
+        [scale4, scale5, scale6, scale8]
+    )
 
-    const selectRandomPhotos = useCallback(() => {
-        const shuffled = [...photos].sort(() => 0.5 - Math.random())
-        return shuffled.slice(0, 6)
-    }, [photos])
-
-    useEffect(() => {
-        setSelectedPhotos(selectRandomPhotos())
-        setIsMounted(true)
-    }, [selectRandomPhotos])
+    const selectedPhotos = useMemo(() => photos.slice(0, 6), [photos])
 
     const pictures: Picture[] = useMemo(
-        () => selectedPhotos.map((photo, i) => ({ photo, scale: scales[i] })),
+        () =>
+            selectedPhotos.map((photo, i) => ({
+                photo,
+                scale: scales[i],
+            })),
         [selectedPhotos, scales]
     )
 
     if (!isMounted || pictures.length === 0) {
         return (
             <div className="flex justify-center items-center h-screen">
-                <div className="animate-pulse text-gray-500">Loading...</div>
+                <div className="animate-pulse text-gray-500">
+                    Loading...
+                </div>
             </div>
         )
     }
@@ -82,13 +86,16 @@ export default function AnimatedGallery({ photos }: AnimatedGalleryProps) {
                     ))}
                 </div>
             </div>
+
             <div className="flex flex-col items-center gap-4 mt-8">
                 <Link
                     href="/gallery"
                     className="group inline-flex items-center gap-2 border border-foreground/20 px-8 py-3 text-[10px] md:text-xs tracking-[0.25em] uppercase font-semibold text-foreground hover:bg-foreground hover:text-background transition-colors duration-300"
                 >
                     Enter Archive Page
-                    <span className="transition-transform duration-300 group-hover:translate-x-0.5">→</span>
+                    <span className="transition-transform duration-300 group-hover:translate-x-0.5">
+                        →
+                    </span>
                 </Link>
             </div>
         </>

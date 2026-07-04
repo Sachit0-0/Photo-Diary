@@ -25,6 +25,6 @@ export async function getPhotos(): Promise<Photo[]> {
   return docs.map((doc) => ({
     id: doc._id,
     title: doc.title ?? '',
-    url: urlFor(doc.photo).width(1200).auto('format').url(),
+   url: urlFor(doc.photo).auto('format').url(),
   }))
 }
