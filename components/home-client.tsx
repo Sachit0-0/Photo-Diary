@@ -96,55 +96,135 @@ export function HomeClient({ photos }: HomeClientProps) {
             </section>
 
             {/* About — horizontal editorial */}
-            <section className="w-full py-28 md:py-40 border-t border-foreground/10">
-                <div className="max-w-screen-xl mx-auto px-8 md:px-12">
-                    <motion.div
-                        initial={{ opacity: 0, y: 32 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-                        className="grid md:grid-cols-2 gap-16 md:gap-24 items-center"
-                    >
-                        <div className="space-y-8">
-                            <SectionLabel num="003" label="About" />
-                            <h3 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-[-0.03em] leading-[0.85] uppercase">
-                                A Small<br />
-                                <span className="text-muted-low">Collection</span>
-                            </h3>
-                            <div className="h-px w-full bg-foreground/10" />
-                            <p className="text-sm font-light text-muted-high leading-relaxed max-w-sm">
-                                This isn't a project or a portfolio <span className="group relative inline-block cursor-help text-foreground/80 hover:text-foreground transition-colors duration-300">
-                                    —
-                                    <span className="pointer-events-none absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-max max-w-[180px] rounded-sm border border-foreground/10 bg-background px-3 py-1.5 text-[11px] font-light text-muted-high opacity-0 scale-95 origin-bottom transition-all duration-200 group-hover:opacity-100 group-hover:scale-100 shadow-sm shadow-black/10">
-                                        yes, a real em dash.
-                                    </span>
-                                </span>{' '}just photos I've taken over the years, kept exactly as random as they happened.
-                            </p>
-                            <p className="text-sm font-light text-muted-med leading-relaxed max-w-sm">
-                                If you find a few that make you stop scrolling for a second, that's pretty cool.
-                            </p>
-                        </div>
+<section className="w-full border-t border-foreground/10 py-28 md:py-40">
+  <div className="mx-auto max-w-screen-xl px-8 md:px-12">
+    <motion.div
+      initial={{ opacity: 0, y: 32 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+      className="grid items-center gap-24 md:grid-cols-2 md:gap-40 lg:gap-56 xl:gap-64"
+    >
+      {/* Left Content */}
+      <div className="space-y-8">
+        <SectionLabel num="003" label="About" />
 
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.96 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                            className="relative aspect-[4/5] overflow-hidden"
-                        >
-                            <Image
-                                src={photos[0]?.url}
-                                alt="Featured moment"
-                                fill
-                                sizes="(max-width: 768px) 100vw, 50vw"
-                                className="object-cover grayscale"
-                                loading="lazy"
-                            />
-                            <div className="absolute inset-0 border border-foreground/10 pointer-events-none" />
-                        </motion.div>
-                    </motion.div>
-                </div>
-            </section>
+        <h3 className="text-5xl font-black uppercase leading-[0.85] tracking-[-0.03em] sm:text-6xl md:text-7xl lg:text-8xl">
+          A Small
+          <br />
+          <span className="text-muted-low">Collection</span>
+        </h3>
+
+        <div className="h-px w-full bg-gradient-to-r from-foreground/20 via-foreground/10 to-transparent" />
+
+        <p className="max-w-sm text-sm font-light leading-relaxed text-muted-high">
+          This isn't a project or a portfolio{" "}
+          <span className="group relative inline-block cursor-help text-foreground/80 transition-colors hover:text-foreground">
+            —
+            <span className="pointer-events-none absolute bottom-full left-1/2 mb-2 w-max max-w-[180px] -translate-x-1/2 scale-95 rounded border border-foreground/10 bg-background px-3 py-1.5 text-[11px] font-light text-muted-high opacity-0 shadow-xl transition-all duration-200 group-hover:scale-100 group-hover:opacity-100">
+              yes, a real em dash.
+            </span>
+          </span>{" "}
+          just photos I've taken over the years, kept exactly as random as they
+          happened.
+        </p>
+
+        <p className="max-w-sm text-sm font-light leading-relaxed text-muted-med">
+          If you find a few that make you stop scrolling for a second, that's
+          pretty cool.
+        </p>
+      </div>
+
+      {/* Right Image */}
+      <div className="flex justify-center md:justify-end">
+        <div
+          className="
+            group
+            relative
+            w-full
+            max-w-[520px]
+            rotate-[-2deg]
+            rounded-sm
+            border
+            border-stone-200
+            bg-white
+            p-4
+            pb-16
+            ring-1
+            ring-black/5
+            shadow-[0_2px_8px_rgba(0,0,0,0.08),0_24px_60px_rgba(0,0,0,0.18)]
+            transition-all
+            duration-500
+            ease-out
+            hover:-translate-y-2
+            hover:rotate-[0.4deg]
+            hover:scale-[1.01]
+            hover:shadow-[0_35px_80px_rgba(0,0,0,0.22)]
+            dark:bg-[#d8d1c3]
+            dark:border-[#c8bead]
+            dark:ring-white/5
+            dark:shadow-[0_2px_12px_rgba(0,0,0,0.45),0_30px_80px_rgba(0,0,0,0.65)]
+          "
+        >
+          {/* Decorative tape */}
+          <div className="absolute -top-2 left-8 h-5 w-16 rotate-[-10deg] rounded-sm bg-stone-300/70 backdrop-blur-[1px] dark:bg-stone-500/30" />
+          <div className="absolute -top-2 right-8 h-5 w-16 rotate-[10deg] rounded-sm bg-stone-300/70 backdrop-blur-[1px] dark:bg-stone-500/30" />
+
+          {/* Image */}
+          <div className="relative overflow-hidden rounded-[2px] ring-1 ring-black/10">
+            <Image
+              src="/cat.jpg"
+              alt="Photography"
+              width={520}
+              height={420}
+              className="
+                h-[420px]
+                w-full
+                object-cover
+                transition-all
+                duration-700
+                ease-out
+                group-hover:scale-[1.03]
+                saturate-[0.9]
+                contrast-105
+                brightness-[0.97]
+                sepia-[0.12]
+              "
+            />
+
+            {/* Soft vignette */}
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/8 via-transparent to-white/5" />
+
+            {/* Film grain */}
+            <div
+              className="
+                pointer-events-none
+                absolute
+                inset-0
+                opacity-[0.035]
+                mix-blend-multiply
+                dark:opacity-[0.05]
+                bg-[radial-gradient(circle_at_1px_1px,currentColor_1px,transparent_0)]
+                bg-[length:8px_8px]
+              "
+            />
+          </div>
+
+          {/* Caption */}
+          <div className="mt-5 flex items-center justify-between px-1">
+            <span className="text-[10px] font-medium uppercase tracking-[0.22em] text-stone-500 dark:text-stone-700">
+              JUL 2026
+            </span>
+
+            <span className="text-[11px] font-medium uppercase tracking-[0.35em] text-zinc-500 dark:text-stone-700">
+              Wander Archive
+            </span>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  </div>
+</section>
 
             {/* Section 004 — Inverted High-Contrast Editorial Banner Call-to-Action */}
             <section className="relative overflow-hidden border-t border-foreground/10 py-32 md:py-44">

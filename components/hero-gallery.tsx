@@ -4,29 +4,30 @@ import styles from './styles.module.scss'
 
 import Image from 'next/image'
 import { useScroll, useTransform, motion, MotionValue } from 'framer-motion'
-import { useRef, useEffect, useState, useMemo } from 'react'
+import { useRef, useMemo } from 'react'
 import Link from 'next/link'
 import type { Photo } from '@/sanity/queries'
+import FancyButton from './ui/fbutton'
 
 interface Picture {
     photo: Photo
     scale: MotionValue<number>
+    sizesAttr: string
+    quality: number
 }
 
 interface AnimatedGalleryProps {
     photos: Photo[]
 }
 
+// Scale factor per gallery position — must match the useTransform calls below
+const SCALE_FACTORS = [4, 5, 6, 5, 6, 8]
+
 export default function AnimatedGallery({ photos }: AnimatedGalleryProps) {
     const container = useRef<HTMLDivElement>(null)
-    const [isMounted, setIsMounted] = useState(false)
-
-    useEffect(() => {
-        setIsMounted(true)
-    }, [])
 
     const { scrollYProgress } = useScroll({
-        target: isMounted ? container : undefined,
+        target: container,
         offset: ['start start', 'end end'],
     })
 
@@ -44,19 +45,22 @@ export default function AnimatedGallery({ photos }: AnimatedGalleryProps) {
 
     const pictures: Picture[] = useMemo(
         () =>
-            selectedPhotos.map((photo, i) => ({
-                photo,
-                scale: scales[i],
-            })),
+            selectedPhotos.map((photo, i) => {
+                const factor = SCALE_FACTORS[i] ?? 4
+                return {
+                    photo,
+                    scale: scales[i],
+                    sizesAttr: `(max-width: 768px) ${Math.min(factor * 50, 200)}vw, ${Math.min(factor * 25, 100)}vw`,
+                    quality: i === 0 ? 90 : 75,
+                }
+            }),
         [selectedPhotos, scales]
     )
 
-    if (!isMounted || pictures.length === 0) {
+    if (pictures.length === 0) {
         return (
             <div className="flex justify-center items-center h-screen">
-                <div className="animate-pulse text-gray-500">
-                    Loading...
-                </div>
+                <div className="animate-pulse text-gray-500">Loading...</div>
             </div>
         )
     }
@@ -65,22 +69,22 @@ export default function AnimatedGallery({ photos }: AnimatedGalleryProps) {
         <>
             <div ref={container} className={styles.container}>
                 <div className={styles.sticky}>
-                    {pictures.map(({ photo, scale }, index) => (
+                    {pictures.map(({ photo, scale, sizesAttr, quality }, index) => (
                         <motion.div
                             key={photo.id}
                             style={{ scale, willChange: 'transform' }}
                             className={styles.el}
                         >
                             <div className={styles.imageContainer}>
-                                <Image
-                                    src={photo.url}
-                                    fill
-                                    alt={photo.title}
-                                    sizes="(max-width: 768px) 400vw, 200vw"
-                                    quality={90}
-                                    priority={index < 2}
-                                    className="object-cover"
-                                />
+                               <Image
+    src={photo.url}
+    fill
+    alt={photo.title}
+    sizes={sizesAttr}
+    quality={quality}
+    priority={index === 0}
+    className="object-cover"
+/>
                             </div>
                         </motion.div>
                     ))}
@@ -88,15 +92,7 @@ export default function AnimatedGallery({ photos }: AnimatedGalleryProps) {
             </div>
 
             <div className="flex flex-col items-center gap-4 mt-8">
-                <Link
-                    href="/gallery"
-                    className="group inline-flex items-center gap-2 border border-foreground/20 px-8 py-3 text-[10px] md:text-xs tracking-[0.25em] uppercase font-semibold text-foreground hover:bg-foreground hover:text-background transition-colors duration-300"
-                >
-                    Enter Archive Page
-                    <span className="transition-transform duration-300 group-hover:translate-x-0.5">
-                        →
-                    </span>
-                </Link>
+            <FancyButton/>
             </div>
         </>
     )

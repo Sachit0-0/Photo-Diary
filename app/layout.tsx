@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { SmoothScroll } from '@/components/smooth-scroll'
+import { Navigation } from '@/components/navigation'
 
 const inter = Inter({
   variable: '--font-inter',
@@ -29,6 +30,7 @@ export default function RootLayout({
     <html lang="en" className={inter.variable} >
       <body className="font-sans antialiased bg-background text-foreground">
         <SmoothScroll>
+                <Navigation />
           {children}
         </SmoothScroll>
       </body>
